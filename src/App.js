@@ -5,7 +5,7 @@ function App() {
     <div>
       <h1>Bienvenido a "ADDIC Dotaciones Institucionales"</h1>
       <input />
-      <button>crear usuario</button>
+      <button> usuario</button>
     </div>
   );
 }
