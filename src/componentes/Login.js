@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 // import { Link } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
@@ -55,3 +56,22 @@ const Login = () => {
 }
 
 export default Login;
+=======
+import { Link } from "react-router-dom";    
+
+const Login = () => {
+  return (
+    <div>
+      <h1>Almacenes "ADIIC Dotaciones Institucionales"</h1>
+      <h1>Iniciar sesión</h1>
+      <h2>Bienvenido, ingrese sus credenciales</h2>
+      <input type="text" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button>Ingresar</button>
+      <Link to={"/crear-cuenta"}>Crear cuenta</Link>
+    </div>
+  );
+};
+
+export default Login;
+>>>>>>> 63147b37533bdd16aa1e591ed6fe4ebf80d87542
