@@ -1,8 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate} from "react-router-dom";
 import swal from "sweetalert";
+import crud from '../conexiones/crud';
+
+
+
+
 
 const CrearCuenta = () => {
+
+   const navigate = useNavigate();
+
   const [usuario, setUsuario] = useState({
     nombre: "",
     email: "",
@@ -45,8 +53,56 @@ const CrearCuenta = () => {
         password: usuario.password,
       };
       console.log(data);
+       const response = await crud.POST(`/api/usuarios`,data);
+       const mensaje = response.msg;
+      //  console.log (mensaje);
+       if(mensaje === "El usuario ya existe"){
+        const mensaje = "El usuario ya existe";
+      swal({
+        title: "Error",
+        text: mensaje,
+        icon: "error",
+        button: {
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "btn btn-danger",
+            closeModal: true,
+          },
+        },
+      });
+
+       }else{
+        const mensaje = "El usuario fue creado correctamente";
+        swal({
+          title: "Información",
+          text: mensaje,
+          icon: "success",
+          button: {
+            confirm: {
+              text: "OK",
+              value: true,
+              visible: true,
+              className: "btn btn-primary",
+              closeModal: true,
+            },
+          },
+        });
+        setUsuario({
+          nombre: '',
+          email: '',
+          password: '',
+          confirmar: ''
+        })
+      //Redireccionar nuevamente a la pagina de login
+      navigate("/");
+
+       };
     }
   };
+
+  
 
   const onSubmit = (e) => {
     e.preventDefault();
