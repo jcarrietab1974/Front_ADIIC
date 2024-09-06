@@ -9,7 +9,7 @@ import crud from '../conexiones/crud';
 
 const CrearCuenta = () => {
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState({
     nombre: "",
@@ -72,7 +72,6 @@ const CrearCuenta = () => {
           },
         },
       });
-
        }else{
         const mensaje = "El usuario fue creado correctamente";
         swal({
@@ -96,7 +95,7 @@ const CrearCuenta = () => {
           confirmar: ''
         })
       //Redireccionar nuevamente a la pagina de login
-      navigate("/");
+      navigate("/login");
 
        };
     }
@@ -111,12 +110,12 @@ const CrearCuenta = () => {
 
   return (
     <main className="container mx-auto mt-5 md:mt-20 p-5 md:flex md:justify-center">
-      <div className="md:w-2/3 lg:w-2/5">
+      <div className="md:w-2/3 lg:w-2/4">
         <h1
           className=" colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
            bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
         >
-          ADIIC Dotaciones Institucionales
+          "ADIIC Dotaciones Institucionales"
         </h1>
 
         <h2
