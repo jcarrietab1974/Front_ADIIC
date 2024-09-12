@@ -28,7 +28,7 @@ const Login = () => {
     //console.log(data);
     const response = await crud.POST(`/api/auth`, data);
     const mensaje = response.msg;
-    //console.log(mensaje);
+    // console.log(mensaje);
     if (mensaje === "El usuario no existe") {
       const mensaje = "El usuario no existe";
       swal({
@@ -62,6 +62,13 @@ const Login = () => {
         },
       });
     } else {
+
+      const jwt = response.token;
+
+    //Guardar la informacion en el localStorage
+    localStorage.setItem ('token', jwt);
+
+
       //Redireccionar nuevamente a la pagina de Admin.js
       navigate("/admin");
     }
