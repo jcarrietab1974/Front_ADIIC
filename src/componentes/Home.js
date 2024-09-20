@@ -1,5 +1,5 @@
 import React from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -14,7 +14,10 @@ const Home = () => {
         <h2 className="colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200 bg-clip-text font-display text-4xl tracking-tight text-transparent text-center">
           Home de clientes
         </h2>
-        <Link className="block text-center my-5 text-gray-100 text-xl" to={"/login"}>
+        <Link
+          className="block text-center my-5 text-gray-100 text-xl"
+          to={"/login"}
+        >
           Iniciar sesión
         </Link>
       </div>

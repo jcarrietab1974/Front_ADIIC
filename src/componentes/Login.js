@@ -21,6 +21,7 @@ const Login = () => {
   };
 
   const ingresarCuenta = async () => {
+    // Los dos password deben ser iguales
     const data = {
       email: usuario.email,
       password: usuario.password,
