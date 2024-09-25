@@ -3,15 +3,17 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
 import crud from "../conexiones/crud";
+import swal from "sweetalert";
 
 const CrearCategoria = () => {
   const navigate = useNavigate();
 
   const [categoria, setCategoria] = useState({
     nombre: "",
+    imagen: ""
   });
 
-  const { nombre } = categoria;
+  const { nombre, imagen } = categoria;
 
   const onChange = (e) => {
     setCategoria({
@@ -23,11 +25,31 @@ const CrearCategoria = () => {
   const ingresarCategoria = async () => {
     const data = {
       nombre: categoria.nombre,
+      imagen: categoria.imagen
     };
     //console.log(data);
     const response = await crud.POST("/api/categorias", data);
     const mensaje = response.msg;
-    console.log(mensaje);
+    const mensaje1 = "La categoria se creo correctamente";
+    swal({
+      title: "Información",
+      text: mensaje1,
+      icon: "success",
+      button: {
+        confirm: {
+          text: "OK",
+          value: true,
+          visible: true,
+          className: "btn btn-primary",
+          closeModal: true,
+        },
+      },
+    });
+
+    //Redireccionar nuevamente a la pagina de login
+  navigate("/admin");
+
+
   };
 
   const onSubmit = (e) => {
@@ -67,6 +89,22 @@ const CrearCategoria = () => {
                   value={nombre}
                   onChange={onChange}
                 />
+
+                <label className="uppercase text-gray-600 block text-lx font-bold">
+                  Imagen de la Categoria
+                </label>
+                <input
+                  type="text"
+                  id="imagen"
+                  name="imagen"
+                  placeholder="Imagen"
+                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  value={imagen}
+                  onChange={onChange}
+                />
+
+                  
+
               </div>
               <input
                 type="submit"
