@@ -22,7 +22,6 @@ class crud {
     const url = `${back.api.baseURL}${resource}`;
     let response = await (await fetch(url, data)).json();
     return response;
-
   }
 
   async POST(resource, body) {
@@ -72,8 +71,6 @@ class crud {
     return response;
   }
 
-  
-
   async DELETE(resource, queryParams) {
     const token = localStorage.getItem("token");
 
@@ -98,5 +95,4 @@ class crud {
 
   }
 }
-
 export default new crud();

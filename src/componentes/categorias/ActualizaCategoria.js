@@ -1,17 +1,29 @@
-import React, { useState } from "react";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import { useNavigate } from "react-router-dom";
-import crud from "../conexiones/crud";
+import React, { useEffect, useState } from "react";
+import Header from "../Header";
+import Sidebar from "../Sidebar";
+import { useNavigate, useParams } from "react-router-dom";
+import crud from "../../conexiones/crud";
 import swal from "sweetalert";
 
-const CrearCategoria = () => {
+const ActualizarCategoria = () => {
   const navigate = useNavigate();
+
+  const { idCategoria } = useParams();
 
   const [categoria, setCategoria] = useState({
     nombre: "",
     imagen: "",
   });
+
+  const cargarCategoria = async () => {
+    const response = await crud.GET(`/api/categorias/${idCategoria}`);
+    console.log(response);
+    setCategoria(response.categoria);
+  };
+
+  useEffect(() => {
+    cargarCategoria();
+  }, []);
 
   const { nombre, imagen } = categoria;
 
@@ -22,18 +34,16 @@ const CrearCategoria = () => {
     });
   };
 
-  const ingresarCategoria = async () => {
+  const actualizarCategoria = async () => {
     const data = {
       nombre: categoria.nombre,
       imagen: categoria.imagen,
     };
-    //console.log(data);
-    const response = await crud.POST("/api/categorias", data);
-    const mensaje = response.msg;
-    const mensaje1 = "La categoria se creo correctamente";
+    const response = await crud.PUT(`/api/categorias/${idCategoria}`, data);
+    const mensaje = "La categoria se actualizo correctamente";
     swal({
       title: "Información",
-      text: mensaje1,
+      text: mensaje,
       icon: "success",
       button: {
         confirm: {
@@ -45,14 +55,12 @@ const CrearCategoria = () => {
         },
       },
     });
-
-    //Redireccionar nuevamente a la pagina de login
     navigate("/admin");
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    ingresarCategoria();
+    actualizarCategoria();
   };
 
   return (
@@ -66,7 +74,7 @@ const CrearCategoria = () => {
               className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
                     bg-clip-text text-4xl tracking-tight text-transparent text-center"
             >
-              Crear Categorias
+              Actualizar Categoria
             </h1>
           </div>
           <div className="mt-2 flex justify-center">
@@ -103,7 +111,7 @@ const CrearCategoria = () => {
               </div>
               <input
                 type="submit"
-                value="Crear Categoria"
+                value="Actualizar Categoria"
                 className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
               />
             </form>
@@ -113,4 +121,4 @@ const CrearCategoria = () => {
     </>
   );
 };
-export default CrearCategoria;
+export default ActualizarCategoria;
