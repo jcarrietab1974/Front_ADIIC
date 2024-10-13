@@ -21,6 +21,25 @@ const Login = () => {
   };
 
   const ingresarCuenta = async () => {
+    // Verificar si los campos están vacíos
+    if (email.trim() === "" || password.trim() === "") {
+      swal({
+        title: "Error",
+        text: "Por favor, ingrese el correo electrónico y la contraseña.",
+        icon: "warning",
+        button: {
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "btn btn-danger",
+            closeModal: true,
+          },
+        },
+      });
+      return; // Detener la ejecución si los campos están vacíos
+    }
+
     // Los dos password deben ser iguales
     const data = {
       email: usuario.email,
@@ -62,13 +81,29 @@ const Login = () => {
           },
         },
       });
-    } else {
 
+      //Datos vacios
+      //} else if (mensaje === "Ingrese sus credenciales") {
+      //const mensaje = "Ingrese sus credenciales";
+      //swal({
+      //title: "Error",
+      //text: mensaje,
+      //icon: "error",
+      //: {
+      //confirm: {
+      //text: "OK",
+      //value: true,
+      //visible: true,
+      //className: "btn btn-danger",
+      //closeModal: true,
+      //},
+      //},
+      //});
+    } else {
       const jwt = response.token;
 
-    //Guardar la informacion en el localStorage
-    localStorage.setItem ('token', jwt);
-
+      //Guardar la informacion en el localStorage
+      localStorage.setItem("token", jwt);
 
       //Redireccionar nuevamente a la pagina de Admin.js
       navigate("/admin");
