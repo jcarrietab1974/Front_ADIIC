@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import crud from "../../conexiones/crud";
+import ViewProductos from "./ViewProductos";
 
 const HomeProductos = () => {
+
   const navigate = useNavigate();
 
   const { idCategoria } = useParams();
+
+  const [productos, setProductos] = useState([]);
+
+  
+  const cargarProductos = async () => {
+    const response = await crud.GET (`/api/productos/${idCategoria}`);
+    setProductos(response);
+  };
+
+  console.log(productos);
+
+  useEffect(() => {
+    cargarProductos();
+  },[]);//Para que solo se ejecute una vez
+
 
   return (
     <>
@@ -30,6 +48,18 @@ const HomeProductos = () => {
               Crear Producto
             </Link>
           </div>
+
+          <div className="bg-gray-600 shadow mt-10 rounded-lg">
+            {productos.map( producto =>
+            <ViewProductos
+              key={producto._id}
+              producto = {producto}
+            />
+            )};
+
+          </div>
+
+
         </main>
       </div>
     </>

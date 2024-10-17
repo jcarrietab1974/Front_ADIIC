@@ -10,6 +10,20 @@ const Sidebar = () => {
       >
         Crear Categoria
       </Link>
+  
+     <div className="py-10">
+      <Link
+        className="bg-lime-800 w-full p-3 text-white uppercase font-bold mt-5 text-center rounded-lg flex justify-center"
+        to={"/admin"}
+      >
+        Admin Categoria
+      </Link>
+
+      </div>
+
+
+
+
     </aside>
   );
 };
