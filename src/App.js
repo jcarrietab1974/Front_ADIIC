@@ -8,6 +8,7 @@ import CrearCategoria from "./componentes/CrearCategoria";
 import ActualizarCategoria from "./componentes/categorias/ActualizaCategoria";
 import HomeProductos from "./componentes/productos/HomeProductos";
 import CrearProductos from "./componentes/productos/CrearProductos";
+import ActualizarProductos from "./componentes/productos/ActualizarProductos";
 
 function App() {
   return (
@@ -32,6 +33,12 @@ function App() {
           path="/crear-producto/:idCategoria"
           exact
           element={<CrearProductos />}
+        />
+        //------
+        <Route
+          path="/actualizar-producto/:idProducto"
+          exact
+          element={<ActualizarProductos />}
         />
       </Routes>
     </Router>

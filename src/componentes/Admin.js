@@ -112,7 +112,7 @@ const Admin = () => {
                           type="submit"
                           value="Eliminar"
                           className="bg-violet-600 mb-5 w-full py-3 px-4 text-white uppercase font-bold rounded hover:cursor-pointer"
-                          onClick={(e) => borrarCategoria(e, item._id)}
+                          onClick={(e) => borrarCategoria(e, item._id)}                                                                        
                         />
 
                         <input

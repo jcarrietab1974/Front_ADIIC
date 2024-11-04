@@ -6,16 +6,12 @@ import crud from "../../conexiones/crud";
 import ViewProductos from "./ViewProductos";
 
 const HomeProductos = () => {
-
-  const navigate = useNavigate();
-
   const { idCategoria } = useParams();
 
   const [productos, setProductos] = useState([]);
 
-  
   const cargarProductos = async () => {
-    const response = await crud.GET (`/api/productos/${idCategoria}`);
+    const response = await crud.GET(`/api/productos/${idCategoria}`);
     setProductos(response);
   };
 
@@ -23,15 +19,14 @@ const HomeProductos = () => {
 
   useEffect(() => {
     cargarProductos();
-  },[]);//Para que solo se ejecute una vez
-
+  }, []); //Para que solo se ejecute una vez
 
   return (
     <>
       <Header />
       <div className="md:flex md:min-h-screen">
         <Sidebar />
-        <main className="flex-1">
+        <main className="flex-1 justify-items-center">
           <div className="mt-2 flex justify-center">
             <h1
               className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
@@ -49,17 +44,12 @@ const HomeProductos = () => {
             </Link>
           </div>
 
-          <div className="bg-gray-600 shadow mt-10 rounded-lg">
-            {productos.map( producto =>
-            <ViewProductos
-              key={producto._id}
-              producto = {producto}
-            />
-            )};
-
+          <div className="bg-gray-600 shadow mt-10 rounded-lg w-4/5 justify-items-center">
+            {productos.map((producto) => (
+              <ViewProductos key={producto._id} producto={producto} />
+            ))}
+            ;
           </div>
-
-
         </main>
       </div>
     </>

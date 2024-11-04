@@ -7,9 +7,7 @@ import swal from "sweetalert";
 
 const CrearProductos = () => {
   const navigate = useNavigate();
-
   const { idCategoria } = useParams();
-
   const [categoria, setCategoria] = useState({
     nombre: "",
     descripcion: "",
