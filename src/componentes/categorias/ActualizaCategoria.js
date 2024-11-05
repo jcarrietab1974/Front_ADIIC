@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
 import crud from "../../conexiones/crud";
 import swal from "sweetalert";
 
-const ActualizarProductos = () => {
+const ActualizarCategoria = () => {
   const navigate = useNavigate();
+
   const { idCategoria } = useParams();
+
   const [categoria, setCategoria] = useState({
     nombre: "",
-    descripcion: "",
-    stock: "",
-    precio: "",
     imagen: "",
-    categoriaId: "",
   });
 
-  const { nombre, descripcion, stock, precio, imagen } = categoria;
+  const cargarCategoria = async () => {
+    const response = await crud.GET(`/api/categorias/${idCategoria}`);
+    console.log(response);
+    setCategoria(response.categoria);
+  };
+
+  useEffect(() => {
+    cargarCategoria();
+  }, []);
+
+  const { nombre, imagen } = categoria;
 
   const onChange = (e) => {
     setCategoria({
@@ -26,22 +34,16 @@ const ActualizarProductos = () => {
     });
   };
 
-  const ingresarCategoria = async () => {
+  const actualizarCategoria = async () => {
     const data = {
       nombre: categoria.nombre,
-      descripcion: categoria.descripcion,
-      stock: categoria.stock,
-      precio: categoria.precio,
       imagen: categoria.imagen,
-      categoriaId: idCategoria,
     };
-    //console.log(data);
-    const response = await crud.POST("/api/productos", data);
-    const mensaje = response.msg;
-    const mensaje1 = "El producto se creo correctamente";
+    const response = await crud.PUT(`/api/categorias/${idCategoria}`, data);
+    const mensaje = "La categoria se actualizo correctamente";
     swal({
       title: "Información",
-      text: mensaje1,
+      text: mensaje,
       icon: "success",
       button: {
         confirm: {
@@ -53,14 +55,12 @@ const ActualizarProductos = () => {
         },
       },
     });
-
-    //Redireccionar nuevamente a la pagina de home-productos
-    navigate(`/home-productos/${idCategoria}`);
+    navigate("/admin");
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    ingresarCategoria();
+    actualizarCategoria();
   };
 
   return (
@@ -84,65 +84,26 @@ const ActualizarProductos = () => {
             >
               <div className="my-5">
                 <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Nombre de la categoria
+                  Nombre de la Categoria
                 </label>
                 <input
-                  type="text"
+                  type="nombre"
                   id="nombre"
                   name="nombre"
-                  placeholder="Ingrese el producto"
+                  placeholder="Ingrese la Categoria"
                   className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
                   value={nombre}
                   onChange={onChange}
                 />
 
                 <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Descripcion del producto
-                </label>
-                <input
-                  type="text"
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="descripcion"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                  value={descripcion}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Stock del producto
-                </label>
-                <input
-                  type="number"
-                  id="stock"
-                  name="stock"
-                  placeholder="stock"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                  value={stock}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Precio del producto
-                </label>
-                <input
-                  type="number"
-                  id="precio"
-                  name="precio"
-                  placeholder="precio"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                  value={precio}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Imagen del producto
+                  Imagen de la Categoria
                 </label>
                 <input
                   type="text"
                   id="imagen"
                   name="imagen"
-                  placeholder="Imagen del producto"
+                  placeholder="Imagen"
                   className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
                   value={imagen}
                   onChange={onChange}
@@ -160,4 +121,4 @@ const ActualizarProductos = () => {
     </>
   );
 };
-export default ActualizarProductos;
+export default ActualizarCategoria;
