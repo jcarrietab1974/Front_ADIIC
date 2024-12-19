@@ -58,58 +58,58 @@ const CrearCategoria = () => {
   return (
     <>
       <Header />
-      <div className="md:flex md:min-h-screen">
-        <Sidebar />
-        <main className="flex-1">
-          <div className="mt-2 flex justify-center">
-            <h1
-              className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-                    bg-clip-text text-4xl tracking-tight text-transparent text-center"
-            >
-              Crear Categorias
-            </h1>
-          </div>
-          <div className="mt-2 flex justify-center">
-            <form
-              onSubmit={onSubmit}
-              className="my-2 bg-white shadow rounded-lg p-10"
-            >
-              <div className="my-5">
-                <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Nombre de la Categoria
-                </label>
-                <input
-                  type="nombre"
-                  id="nombre"
-                  name="nombre"
-                  placeholder="Ingrese la Categoria"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                  value={nombre}
-                  onChange={onChange}
-                />
+        <div className="md:flex md:min-h-screen">
+          <Sidebar />
+          <main className="flex-1">
+            <div className="mt-2 flex justify-center">
+              <h1
+                className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
+                      bg-clip-text text-4xl tracking-tight text-transparent text-center"
+              >
+                Crear Categorias
+              </h1>
+            </div>
+            <div className="mt-2 flex justify-center">
+              <form
+                onSubmit={onSubmit}
+                className="my-2 bg-white shadow rounded-lg p-10">
+                <div className="my-5">
+                  <label className="uppercase text-gray-600 block text-lx font-bold">
+                    Nombre de la Categoria
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Ingrese la Categoria"
+                    className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                    value={nombre}
+                    onChange={onChange}
+                  />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
-                  Imagen de la Categoria
-                </label>
+                  <label className="uppercase text-gray-600 block text-lx font-bold">
+                    Imagen de la Categoria
+                  </label>
+                  <input
+                    type="text"
+                    id="imagen"
+                    name="imagen"
+                    placeholder="Imagen"
+                    className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                    value={imagen}
+                    onChange={onChange}
+                  />
+                </div>
+
                 <input
-                  type="text"
-                  id="imagen"
-                  name="imagen"
-                  placeholder="Imagen"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                  value={imagen}
-                  onChange={onChange}
+                  type="submit"
+                  value="Crear Categoria"
+                  className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
                 />
-              </div>
-              <input
-                type="submit"
-                value="Crear Categoria"
-                className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
-              />
-            </form>
-          </div>
-        </main>
-      </div>
+              </form>
+            </div>
+          </main>
+        </div>
     </>
   );
 };

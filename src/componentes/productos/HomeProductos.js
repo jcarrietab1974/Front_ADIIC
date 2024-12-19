@@ -6,17 +6,16 @@ import crud from "../../conexiones/crud";
 import ViewProductos from "./ViewProductos";
 
 const HomeProductos = () => {
+  const navigate = useNavigate();
   const { idCategoria } = useParams();
-
   const [productos, setProductos] = useState([]);
-
   const cargarProductos = async () => {
-    const response = await crud.GET(`/api/productos/${idCategoria}`);
+    const response = await crud.GET(
+      `/api/productos/porcategoria/${idCategoria}`
+    );
     setProductos(response);
   };
-
   console.log(productos);
-
   useEffect(() => {
     cargarProductos();
   }, []); //Para que solo se ejecute una vez
@@ -45,9 +44,10 @@ const HomeProductos = () => {
           </div>
 
           <div className="bg-gray-600 shadow mt-10 rounded-lg w-4/5 justify-items-center">
-            {productos.map((producto) => (
-              <ViewProductos key={producto._id} producto={producto} />
-            ))}
+            {productos &&
+              productos.map((producto) => (
+                <ViewProductos key={producto._id} producto={producto} />
+              ))}
             ;
           </div>
         </main>

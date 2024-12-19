@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import crud from "../../conexiones/crud";
 import swal from "sweetalert";
 import { useNavigate, useParams } from "react-router-dom";
-import ActualizarProductos from "./ActualizarProductos";
 
 export const ViewProductos = ({ producto }) => {
   const navigate = useNavigate();
+
   const { nombre, descripcion, stock, precio, imagen } = producto;
 
   const { idCategoria } = useParams();
@@ -14,11 +14,9 @@ export const ViewProductos = ({ producto }) => {
 
   const cargarProductos = async () => {
     const response = await crud.GET(`/api/productos/${idCategoria}`);
-    setProductos(response);
+    setProductos(response.productos);
   };
-
   console.log(productos);
-
   useEffect(() => {
     cargarProductos();
   }, []); //Para que solo se ejecute una vez
@@ -47,7 +45,6 @@ export const ViewProductos = ({ producto }) => {
       }
     });
   };
-
   const actualizarProducto = async (e, idProducto) => {
     navigate(`/actualizar-producto/${idProducto}`);
   };
@@ -65,8 +62,9 @@ export const ViewProductos = ({ producto }) => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-2">
-        <button className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
-        onClick={(e) => actualizarProducto(e, producto._id)}
+        <button
+          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+          onClick={(e) => actualizarProducto(e, producto._id)}
         >
           Editar
         </button>
