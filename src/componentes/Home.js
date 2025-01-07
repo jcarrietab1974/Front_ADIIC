@@ -4,154 +4,121 @@ import crud from "../conexiones/crud";
 
 const Home = () => {
   const [categoria, setCategoria] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [loadingCategorias, setLoadingCategorias] = useState(true);
+  const [loadingProductos, setLoadingProductos] = useState(true);
+  const [errorCategorias, setErrorCategorias] = useState(null);
+  const [errorProductos, setErrorProductos] = useState(null);
 
   const cargarCategorias = async () => {
-    const response = await crud.GET(`/api/categorias/`);
-    setCategoria(response.categoria);
+    setLoadingCategorias(true);
+    try {
+      const response = await crud.GET(`/api/categorias/`);
+      setCategoria(response.categoria || []); // Manejo de respuesta vacía
+    } catch (error) {
+      setErrorCategorias(error);
+      console.error("Error al cargar categorías:", error);
+    } finally {
+      setLoadingCategorias(false);
+    }
+  };
+
+  const cargarProductos = async () => {
+    setLoadingProductos(true);
+    try {
+      const response = await crud.GET(`/api/productos/`);
+      setProductos(response.productos || []); // Manejo de respuesta vacía
+    } catch (error) {
+      setErrorProductos(error);
+      console.error("Error al cargar productos:", error);
+    } finally {
+      setLoadingProductos(false);
+    }
   };
 
   useEffect(() => {
     cargarCategorias();
-  }, []);
-
-  const [productos, setProductos] = useState([]);
-
-  const cargarProductos = async () => {
-    const response = await crud.GET(`/api/productos/`);
-    setProductos(response.productos);
-  };
-
-  useEffect(() => {
     cargarProductos();
   }, []);
 
+  if (loadingCategorias || loadingProductos) {
+    return <div className="text-center py-8">Cargando...</div>; // Indicador de carga centralizado
+  }
+
+    if (errorCategorias || errorProductos) {
+        return <div className="text-center py-8 text-red-500">Error al cargar datos. Por favor, inténtelo de nuevo más tarde.</div>;
+    }
+
   return (
-    <main className="flex-1">
-      <div className=" flex justify-center   md:w-2/3 lg:w-3/5">
-        <h1
-          className=" colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-         bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
-        >
-          "ADIIC Dotaciones Institucionales"
+    <main className="flex-1 w-full p-4 md:p-6 lg:p-8">
+      <div className="text-center mb-8"> {/* Contenedor para centrar el texto */}
+        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-700 to-pink-500 mb-2">
+          ADIIC Dotaciones Institucionales
         </h1>
-        <h2 className="colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200 bg-clip-text font-display text-4xl tracking-tight text-transparent text-center">
+        <h2 className="text-2xl md:text-3xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-700 to-pink-500 mb-4">
           Home de clientes
         </h2>
         <Link
-          className="block text-center my-5 text-gray-100 text-xl"
           to={"/login"}
+          className="inline-block px-6 py-3 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition duration-300"
         >
           Iniciar sesión
         </Link>
       </div>
 
-      <div className="flex-1 bg-grey-100">
-        <div className="py-16 sm:py-24 xl:mx-auto xl:max-w-7xl xl:px-8">
-          <div className="px-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8 xl:px-0">
-            <h2 className="text-2xl font-bold tracking-tight text-indigo-600">
-              CATEGORIAS
-            </h2>
+      {/* Sección de Categorías */}
+      <section className="bg-gray-100 p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-2xl font-bold text-indigo-600 mb-4">CATEGORIAS</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {categoria.map((category) => (
             <a
-              href="#"
-              className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block"
+              key={category.nombre}
+              href={category.href}
+              className="relative block rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300"
             >
-              EXPLORAR TODAS LAS CATEGORIAS.
-              <span aria-hidden="true"> &rarr;</span>
+              <div className="relative h-64"> {/* Altura fija para las imágenes */}
+                <img
+                  src={category.imagen}
+                  alt={category.nombre}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black opacity-30"></div> {/* Oscurecimiento de la imagen */}
+              </div>
+              <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
+                <h3 className="text-xl font-bold text-white">{category.nombre}</h3>
+              </div>
             </a>
-          </div>
+          ))}
+        </div>
+      </section>
 
-          <div className="mt-4 flow-root">
-            <div className="-my-2">
-              <div className="relative box-content h-80 overflow-x-auto py-2 xl:overflow-visible">
-                <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-                  {categoria.map((category) => (
-                    <a
-                      key={category.nombre}
-                      href={category.href}
-                      className="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"
-                    >
-                      <span aria-hidden="true" className="absolute inset-0">
-                        <img
-                          src={category.imagen}
-                          alt=""
-                          className="h-full w-full object-cover object-center"
-                        />
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
-                      />
-                      <span className="relative mt-auto text-center text-xl font-bold text-white">
-                        {category.nombre}
-                      </span>
-                    </a>
-                  ))}
-                </div>
+      {/* Sección de Productos */}
+      <section className="bg-gray-500 p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">PRODUCTOS ADQUIRIDOS</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {productos.map((product) => (
+            <div key={product.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="relative h-64">
+                <img
+                  src={product.imagen}
+                  alt={product.nombre}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-medium text-gray-900">{product.nombre}</h3>
+                <p className="text-gray-600 text-sm mt-1">Stock: {product.stock}</p>
+                <p className="text-gray-900 font-semibold mt-2">${product.precio}</p>
+                <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Añadir al carrito
+                </button>
               </div>
             </div>
-          </div>
-
-          <div className="mt-6 px-4 sm:hidden">
-            <a
-              href="#"
-              className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-            >
-              EXPLORAR TODAS LAS CATEGORIAS.
-              <span aria-hidden="true"> &rarr;</span>
-            </a>
-          </div>
+          ))}
         </div>
-      </div>
-
-      <div className="bg-gray-500">
-        <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-          <h2 className="text-xl font-bold text-gray-900">
-            PRODUCTOS ADQUIRIDOS
-          </h2>
-
-          <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-            {productos.map((product) => (
-              <div key={product.id}>
-                <div className="relative">
-                  <div className="relative h-72 w-full overflow-hidden rounded-lg">
-                    <img
-                      src={product.imagen}
-                      alt={product.imageAlt}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
-                  <div className="relative mt-4">
-                    <h3 className="text-sm font-medium text-gray-900">
-                      {product.nombre}
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.stock}
-                    </p>
-                  </div>
-                  <div className="absolute inset-x-0 top-0 flex h-72 items-end justify-end overflow-hidden rounded-lg p-4">
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"
-                    />
-                    <p className="relative text-lg font-semibold text-white">
-                      {product.precio}
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <a
-                    href={product.href}
-                    className="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200"
-                  >
-                    Add to bag<span className="sr-only">, {product.name}</span>
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      </section>
     </main>
   );
 };
+
 export default Home;
