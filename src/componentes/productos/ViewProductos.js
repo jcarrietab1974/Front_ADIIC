@@ -52,12 +52,12 @@ export const ViewProductos = ({ producto }) => {
   return (
     <div className="border-b p-5 flex justify-between items-center w-2/3">
       <div className="flex flex-col items-start">
-        <p className="mb-1 text-xl text-gray-50">nombre:{nombre}</p>
+        <p className="mb-1 text-xl text-gray-50">Nombre:{nombre}</p>
         <p className="mb-1 text-sm text-gray-50 uppercase">
-          descripcion:{descripcion}
+          Descripcion:{descripcion}
         </p>
-        <p className="mb-1  text-gray-50">stock:{stock}</p>
-        <p className="mb-1  text-gray-50">precio:{precio}</p>
+        <p className="mb-1  text-gray-50">Stock:{stock}</p>
+        <p className="mb-1  text-gray-50">Precio:{precio}</p>
         <img src={imagen} width="150" height="150" alt="imagen-producto"></img>
       </div>
 
