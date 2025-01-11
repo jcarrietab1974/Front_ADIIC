@@ -124,7 +124,7 @@ const Admin = () => {
 
                         <input
                           type="submit"
-                          value="Crear producto"
+                          value="Lista de Productos"
                           className="bg-violet-600 mb-5 w-full py-3 px-4 text-white uppercase font-bold rounded hover:cursor-pointer"
                           onClick={(e) => crearProductos(item._id)}
                         />

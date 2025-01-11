@@ -50,33 +50,38 @@ export const ViewProductos = ({ producto }) => {
   };
 
   return (
-    <div className="border-b p-5 flex justify-between items-center w-2/3">
-      <div className="flex flex-col items-start">
-        <p className="mb-1 text-xl text-gray-50">Nombre:{nombre}</p>
-        <p className="mb-1 text-sm text-gray-50 uppercase">
-          Descripcion:{descripcion}
-        </p>
-        <p className="mb-1  text-gray-50">Stock:{stock}</p>
-        <p className="mb-1  text-gray-50">Precio:{precio}</p>
-        <img src={imagen} width="150" height="150" alt="imagen-producto"></img>
+    <div className="border-b p-5 w-full md:w-2/3 lg:w-3/4 mx-auto flex flex-col lg:flex-row items-center gap-4"> {/* Ajuste en w-full y lg:flex-row */}
+      <div className="w-full lg:w-1/3 flex justify-center lg:justify-start"> {/* Contenedor para la imagen */}
+        <img
+          src={imagen}
+          alt="imagen-producto"
+          className="max-w-full h-auto rounded-lg"
+        />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-2">
-        <button
-          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
-          onClick={(e) => actualizarProducto(e, producto._id)}
-        >
-          Editar
-        </button>
+      <div className="flex flex-col flex-grow lg:flex-grow-0 items-start w-full lg:w-2/3"> {/* Contenedor para la información */}
+        <p className="mb-1 text-lg text-gray-50 break-words">Nombre: {nombre}</p>
+        <p className="mb-1 text-lg text-gray-50 break-words">Descripción: {descripcion}</p>
+        <p className="mb-1 text-lg text-gray-50">Stock: {stock}</p>
+        <p className="mb-1 text-lg text-gray-50">Precio: ${precio}</p>
+        <div className="flex flex-row flex-wrap mt-4 gap-2 w-full justify-center lg:justify-start">
+          <button
+            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded w-auto"
+            onClick={() => actualizarProducto(producto._id)}
+          >
+            Editar
+          </button>
 
-        <button
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={(e) => borrarProducto(e, producto._id)}
-        >
-          Eliminar
-        </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-auto"
+            onClick={(e) => borrarProducto(e, producto._id)}
+          >
+            Eliminar
+          </button>
+        </div>
       </div>
     </div>
   );
 };
+
 export default ViewProductos;

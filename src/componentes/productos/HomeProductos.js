@@ -34,7 +34,7 @@ const HomeProductos = () => {
               Lista de Productos
             </h1>
           </div>
-          <div className="p-10">
+          <div className="p-7">
             <Link
               to={`/crear-producto/${idCategoria}`}
               className="bg-violet-600 w-full p-3 text-white uppercase font-bold mt-5 text-center rounded-lg"
@@ -43,7 +43,7 @@ const HomeProductos = () => {
             </Link>
           </div>
 
-          <div className="bg-gray-600 shadow mt-10 rounded-lg w-4/5 justify-items-center">
+          <div className="bg-gray-600 shadow mt-5 rounded-lg w-4/5 justify-items-center">
             {productos &&
               productos.map((producto) => (
                 <ViewProductos key={producto._id} producto={producto} />
