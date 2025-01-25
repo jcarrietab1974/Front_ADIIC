@@ -7,137 +7,138 @@ import swal from "sweetalert";
 
 const Admin = () => {
   const navigate = useNavigate();
+  const [categorias, setCategorias] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  //Se crea una ruta segura verificando el token
   useEffect(() => {
     const autenticarUsuario = async () => {
       const token = localStorage.getItem("token");
-      // console.log(token);
       if (!token) {
         navigate("/login");
       }
     };
     autenticarUsuario();
-  }, [navigate]); //[] Se ejecuta solo una vez
+  }, [navigate]);
 
-  //Se utiliza para recibir todas las categorias que bienen
-  const [categoria, setCategoria] = useState([]);
-
-  //Se crea una funcion
   const cargarCategorias = async () => {
-    const response = await crud.GET(`/api/categorias`);
-    console.log(response);
-    setCategoria(response.categoria);
+    setIsLoading(true);
+    try {
+      const response = await crud.GET(`/api/categorias`);
+      if (response && response.categoria) {
+        setCategorias(response.categoria);
+      } else {
+        console.error("Respuesta de la API inválida:", response);
+        swal(
+          "Error",
+          "No se pudieron cargar las categorías. Contacte al administrador.",
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Error al cargar las categorías:", error);
+      swal(
+        "Error",
+        "Ocurrió un error al cargar las categorías. Inténtelo nuevamente más tarde.",
+        "error"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
-  //Apenas se ingrese se debe ejecutar para mostrar las categorias
+
   useEffect(() => {
     cargarCategorias();
-  }, []); //Para que solo se ejecute una vez
+  }, []);
 
   const borrarCategoria = async (e, idCategoria) => {
     swal({
-      title: "Estas seguro de eliminar esta categoria?",
-      text: "!Una vez borrada, no podrás recuperar esta categoria!",
+      title: "¿Estás seguro de eliminar esta categoría?",
+      text: "¡Una vez borrada, no podrás recuperar esta categoría!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
+    }).then(async (willDelete) => {
       if (willDelete) {
         e.preventDefault();
-        const response = crud.DELETE(`/api/categorias/${idCategoria}`);
-        //console.log(response.msg);
-        const mensaje = response.msg;
-        if (response) {
-          swal("!Poof! !Su categoria ha sido borrada correctamente!", {
-            icon: "success",
-          });
+        try {
+          const response = await crud.DELETE(`/api/categorias/${idCategoria}`);
+          if (response) {
+            swal("¡Poof! ¡Su categoría ha sido borrada correctamente!", {
+              icon: "success",
+            });
+            cargarCategorias();
+          }
+        } catch (error) {
+          console.error("Error al borrar la categoría:", error);
+          swal("Error", "Ocurrió un error al borrar la categoría.", "error");
         }
-        cargarCategorias();
       } else {
-        swal("!Tu categoria esta a salvo!");
+        swal("¡Tu categoría está a salvo!");
       }
     });
   };
 
-  const actualizarCategoria = async (idCategoria) => {
+  const actualizarCategoria = (idCategoria) => {
     navigate(`/actualizar-categoria/${idCategoria}`);
   };
 
-  const crearProductos = async (idCategoria) => {
+  const crearProductos = (idCategoria) => {
     navigate(`/home-productos/${idCategoria}`);
   };
+
+  if (isLoading) {
+    return <div>Cargando categorías...</div>;
+  }
 
   return (
     <>
       <Header />
       <div className="md:flex md:min-h-screen">
         <Sidebar />
-        <main className="flex-1">
-          <h1
-            className=" colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-          bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
-          >
-            Lista de categorias
+        <main className="flex-1 p-4">
+          <h1 className="bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200 bg-clip-text font-display text-4xl tracking-tight text-transparent text-center mb-6">
+            Lista de categorías
           </h1>
 
-          <div>
-            <table>
-              <thead className="bg-white">
-                <tr>
-                  <th>Imagen</th>
-                  <th>Nombre</th>
-                  <th>ID</th>
-                  <th>Opciones</th>
-                </tr>
-              </thead>
-
-              <tbody className="bg-white">
-                {
-                  //Esta es la funcion de javaScrip que nos permite hacer dinamico
-                  //la tabla, nos permite realizar el llenado automatico
-                  categoria.map((item) => (
-                    <tr key={item._id}>
-                      <td>
-                        <img
-                          src={item.imagen}
-                          width="150"
-                          height="150"
-                          alt="Imagen de referencia"
-                        ></img>
-                      </td>
-                      <td>{item.nombre}</td>
-                      <td>{item._id}</td>
-                      <td>
-                        <input
-                          type="submit"
-                          value="Eliminar"
-                          className="bg-violet-600 mb-5 w-full py-3 px-4 text-white uppercase font-bold rounded hover:cursor-pointer"
-                          onClick={(e) => borrarCategoria(e, item._id)}
-                        />
-
-                        <input
-                          type="submit"
-                          value="Actualizar"
-                          className="bg-violet-600 mb-5 w-full py-3 px-4 text-white uppercase font-bold rounded hover:cursor-pointer"
-                          onClick={(e) => actualizarCategoria(item._id)}
-                        />
-
-                        <input
-                          type="submit"
-                          value="Lista de Productos"
-                          className="bg-violet-600 mb-5 w-full py-3 px-4 text-white uppercase font-bold rounded hover:cursor-pointer"
-                          onClick={(e) => crearProductos(item._id)}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> {/* Contenedor grid */}
+            {categorias.map((item) => (
+              <div key={item._id} className="bg-white rounded-lg shadow-md overflow-hidden"> {/* Tarjeta */}
+                <img
+                  src={item.imagen}
+                  alt={item.nombre}
+                  className="w-full h-auto my-1 object-cover"
+                />
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold mb-2 text-center">{item.nombre}</h2> {/*Nombre centrado*/}
+                  <p className="text-gray-600 text-center mb-4">{item._id}</p> {/*ID centrado*/}
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
+                      onClick={(e) => borrarCategoria(e, item._id)}
+                    >
+                      Eliminar
+                    </button>
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+                      onClick={() => actualizarCategoria(item._id)}
+                    >
+                      Actualizar
+                    </button>
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
+                      onClick={() => crearProductos(item._id)}
+                    >
+                      Lista de Productos
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </main>
       </div>
     </>
   );
 };
+
 export default Admin;
