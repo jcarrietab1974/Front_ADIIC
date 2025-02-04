@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-import { Link,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-import crud from '../conexiones/crud';
-
-
-
-
-
+import crud from "../conexiones/crud";
 
 const CrearCuenta = () => {
-
   const navigate = useNavigate();
 
   const [usuario, setUsuario] = useState({
@@ -54,26 +48,26 @@ const CrearCuenta = () => {
         password: usuario.password,
       };
       console.log(data);
-       const response = await crud.POST(`/api/usuarios`,data);
-       const mensaje = response.msg;
+      const response = await crud.POST(`/api/usuarios`, data);
+      const mensaje = response.msg;
       //  console.log (mensaje);
-       if(mensaje === "El usuario ya existe"){
+      if (mensaje === "El usuario ya existe") {
         const mensaje = "El usuario ya existe";
-      swal({
-        title: "Error",
-        text: mensaje,
-        icon: "error",
-        button: {
-          confirm: {
-            text: "OK",
-            value: true,
-            visible: true,
-            className: "btn btn-danger",
-            closeModal: true,
+        swal({
+          title: "Error",
+          text: mensaje,
+          icon: "error",
+          button: {
+            confirm: {
+              text: "OK",
+              value: true,
+              visible: true,
+              className: "btn btn-danger",
+              closeModal: true,
+            },
           },
-        },
-      });
-       }else{
+        });
+      } else {
         const mensaje = "El usuario fue creado correctamente";
         swal({
           title: "Información",
@@ -90,19 +84,16 @@ const CrearCuenta = () => {
           },
         });
         setUsuario({
-          nombre: '',
-          email: '',
-          password: '',
-          confirmar: ''
-        })
-      //Redireccionar nuevamente a la pagina de login
-      navigate("/login");
-
-       };
+          nombre: "",
+          email: "",
+          password: "",
+          confirmar: "",
+        });
+        //Redireccionar nuevamente a la pagina de login
+        navigate("/login");
+      }
     }
   };
-
-  
 
   const onSubmit = (e) => {
     e.preventDefault();
