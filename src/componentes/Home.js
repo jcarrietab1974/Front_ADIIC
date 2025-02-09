@@ -45,18 +45,30 @@ const Home = () => {
     return <div className="text-center py-8">Cargando...</div>; // Indicador de carga centralizado
   }
 
-    if (errorCategorias || errorProductos) {
-        return <div className="text-center py-8 text-red-500">Error al cargar datos. Por favor, inténtelo de nuevo más tarde.</div>;
-    }
+  if (errorCategorias || errorProductos) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        Error al cargar datos. Por favor, inténtelo de nuevo más tarde.
+      </div>
+    );
+  }
 
   return (
-    <main className="flex-1 w-full p-4 md:p-6 lg:p-8">
-      <div className="text-center mb-8"> {/* Contenedor para centrar el texto */}
-        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-700 to-pink-500 mb-2">
-          ADIIC Dotaciones Institucionales
+    <div
+      className="bg-[url(https://res.cloudinary.com/dv84nv8y0/image/upload/v1738628244/Dise%C3%B1o_sin_t%C3%ADtulo_af8ore.png)] 
+    bg-cover bg-center bg-no-repeat min-h-screen w-full flex items-center justify-center"
+    >
+      <main className="flex flex-col items-center justify-center w-full p-4 md:p-6 lg:p-8 text-center bg-gradient-to-r from-white">
+        <img 
+          src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1739058063/ADIIC_tyrijp.png" 
+          alt="Descripción" 
+          className="w-3xs" 
+        />
+        <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-black mb-2">
+          Dotaciones Institucionales
         </h1>
         <h2 className="text-2xl md:text-3xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-700 to-pink-500 mb-4">
-          Home de clientes
+          Asesoria en dotaciones institucionales e imagen corporativa
         </h2>
         <Link
           to={"/login"}
@@ -64,60 +76,8 @@ const Home = () => {
         >
           Iniciar sesión
         </Link>
-      </div>
-
-      {/* Sección de Categorías */}
-      <section className="bg-gray-100 p-6 rounded-lg shadow-md mb-8">
-        <h2 className="text-2xl font-bold text-indigo-600 mb-4">CATEGORIAS</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {categoria.map((category) => (
-            <a
-              key={category.nombre}
-              href={category.href}
-              className="relative block rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300"
-            >
-              <div className="relative h-64"> {/* Altura fija para las imágenes */}
-                <img
-                  src={category.imagen}
-                  alt={category.nombre}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black opacity-30"></div> {/* Oscurecimiento de la imagen */}
-              </div>
-              <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
-                <h3 className="text-xl font-bold text-white">{category.nombre}</h3>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* Sección de Productos */}
-      <section className="bg-gray-500 p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">PRODUCTOS ADQUIRIDOS</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {productos.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
-              <div className="relative h-64">
-                <img
-                  src={product.imagen}
-                  alt={product.nombre}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-medium text-gray-900">{product.nombre}</h3>
-                <p className="text-gray-600 text-sm mt-1">Stock: {product.stock}</p>
-                <p className="text-gray-900 font-semibold mt-2">${product.precio}</p>
-                <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Añadir al carrito
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 };
 

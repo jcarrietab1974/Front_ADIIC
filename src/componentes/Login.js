@@ -116,7 +116,7 @@ const Login = () => {
   };
 
   return (
-    <main className="container mx-auto mt-5 md:mt-20 p-5 md:flex md:justify-center">
+    <main className="container mx-auto mt-5 md:mt-20 p-5 md:flex md:justify-center bg-slate-200">
       <div className="md:w-2/3 lg:w-2/4">
         <h1
           className=" colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
