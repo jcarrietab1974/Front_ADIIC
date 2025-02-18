@@ -59,22 +59,22 @@ const Home = () => {
     bg-cover bg-center bg-no-repeat min-h-screen w-full flex items-center justify-center"
     >
       <main className="flex flex-col items-center justify-center w-full p-4 md:p-6 lg:p-8 text-center bg-gradient-to-r from-white">
-        <img 
-          src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1739058063/ADIIC_tyrijp.png" 
-          alt="Descripción" 
-          className="w-3xs" 
+        <img
+          src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1739396784/Logo_2_dpgrjs.png"
+          alt="Descripción"
+          className="w-3xs items-center justify-center"
         />
-        <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-black mb-2">
+        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-lime-800 via-lime-900 to-lime-950 mb-2">
           Dotaciones Institucionales
         </h1>
-        <h2 className="text-2xl md:text-3xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-700 to-pink-500 mb-4">
-          Asesoria en dotaciones institucionales e imagen corporativa
-        </h2>
+        <h3 className="text-2xl md:text-3xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-lime-800 via-lime-900 to-lime-950 mb-4">
+          Asesoria en Dotaciones Institucionales e Imagen Corporativa
+        </h3>
         <Link
           to={"/login"}
-          className="inline-block px-6 py-3 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition duration-300"
+          className="inline-block px-6 py-3 bg-lime-700 text-white font-medium rounded hover:bg-lime-500 transition duration-300"
         >
-          Iniciar sesión
+          Iniciar Sesión
         </Link>
       </main>
     </div>

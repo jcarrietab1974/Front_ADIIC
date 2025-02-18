@@ -40,20 +40,17 @@ const Login = () => {
       return; // Detener la ejecución si los campos están vacíos
     }
 
-    // Los dos password deben ser iguales
     const data = {
       email: usuario.email,
       password: usuario.password,
     };
-    //console.log(data);
     const response = await crud.POST(`/api/auth`, data);
     const mensaje = response.msg;
-    // console.log(mensaje);
+
     if (mensaje === "El usuario no existe") {
-      const mensaje = "El usuario no existe";
       swal({
         title: "Error",
-        text: mensaje,
+        text: "El usuario no existe",
         icon: "error",
         button: {
           confirm: {
@@ -66,10 +63,9 @@ const Login = () => {
         },
       });
     } else if (mensaje === "Password incorrecto") {
-      const mensaje = "Password incorrecto";
       swal({
         title: "Error",
-        text: mensaje,
+        text: "Password incorrecto",
         icon: "error",
         button: {
           confirm: {
@@ -81,31 +77,9 @@ const Login = () => {
           },
         },
       });
-
-      //Datos vacios
-      //} else if (mensaje === "Ingrese sus credenciales") {
-      //const mensaje = "Ingrese sus credenciales";
-      //swal({
-      //title: "Error",
-      //text: mensaje,
-      //icon: "error",
-      //: {
-      //confirm: {
-      //text: "OK",
-      //value: true,
-      //visible: true,
-      //className: "btn btn-danger",
-      //closeModal: true,
-      //},
-      //},
-      //});
     } else {
       const jwt = response.token;
-
-      //Guardar la informacion en el localStorage
       localStorage.setItem("token", jwt);
-
-      //Redireccionar nuevamente a la pagina de Admin.js
       navigate("/admin");
     }
   };
@@ -116,27 +90,19 @@ const Login = () => {
   };
 
   return (
-    <main className="container mx-auto mt-5 md:mt-20 p-5 md:flex md:justify-center bg-slate-200">
-      <div className="md:w-2/3 lg:w-2/4">
-        <h1
-          className=" colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-         bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
-        >
-          "ADIIC Dotaciones Institucionales"
-        </h1>
-
-        <h2
-          className="colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-         bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
-        >
-          Iniciar sesion
-        </h2>
+    <main className="flex items-center justify-center min-h-screen bg-lime-100">
+      <div className="w-full max-w-md p-5">
+        <img
+          src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1732987889/logo-dotac-1-337x133_zp5dzx.png"
+          alt="Descripción"
+          className="w-3xs mx-auto"
+        />
 
         <form
           onSubmit={onSubmit}
-          className="my-10 bg-white shadow rounded-lg p-10"
+          className="my-3 bg-white shadow rounded-lg p-10"
         >
-          <div className="my-5">
+          <div className="my-4">
             <label className="uppercase text-gray-600 block text-lx font-bold">
               Email
             </label>
@@ -149,7 +115,7 @@ const Login = () => {
               value={email}
               onChange={onChange}
             />
-            <br></br>
+            <br />
             <label className="uppercase text-gray-600 block text-lx font-bold">
               Password
             </label>
@@ -167,11 +133,10 @@ const Login = () => {
           <input
             type="submit"
             value="Iniciar Sesión"
-            className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
+            className="bg-lime-500 my-1 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
           />
-
-          <Link className="block text-center my-5" to={"/crear-cuenta"}>
-            Crear Cuenta
+          <Link className="block text-center my-1 font-bold" to={"/"}>
+            Regresar
           </Link>
         </form>
       </div>
@@ -180,3 +145,7 @@ const Login = () => {
 };
 
 export default Login;
+
+/* <h2 className="bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200 bg-clip-text font-display text-4xl tracking-tight text-transparent text-center">
+          Iniciar sesión
+        </h2>*/

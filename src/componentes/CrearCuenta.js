@@ -23,9 +23,7 @@ const CrearCuenta = () => {
   };
 
   const crearCuenta = async () => {
-    //Los dos passwords deben ser iguales
     if (password !== confirmar) {
-      console.log("Son diferentes los passwords");
       const mensaje = "Las contraaseñas son diferentes.";
       swal({
         title: "Error",
@@ -47,15 +45,12 @@ const CrearCuenta = () => {
         email: usuario.email,
         password: usuario.password,
       };
-      console.log(data);
       const response = await crud.POST(`/api/usuarios`, data);
       const mensaje = response.msg;
-      //  console.log (mensaje);
       if (mensaje === "El usuario ya existe") {
-        const mensaje = "El usuario ya existe";
         swal({
           title: "Error",
-          text: mensaje,
+          text: "El usuario ya existe",
           icon: "error",
           button: {
             confirm: {
@@ -68,10 +63,9 @@ const CrearCuenta = () => {
           },
         });
       } else {
-        const mensaje = "El usuario fue creado correctamente";
         swal({
           title: "Información",
-          text: mensaje,
+          text: "El usuario fue creado correctamente",
           icon: "success",
           button: {
             confirm: {
@@ -89,7 +83,6 @@ const CrearCuenta = () => {
           password: "",
           confirmar: "",
         });
-        //Redireccionar nuevamente a la pagina de login
         navigate("/login");
       }
     }
@@ -101,32 +94,21 @@ const CrearCuenta = () => {
   };
 
   return (
-    <main className="container mx-auto mt-5 md:mt-20 p-5 md:flex md:justify-center">
-      <div className="md:w-2/3 lg:w-2/4">
-        <h1
-          className=" colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-           bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
-        >
-          "ADIIC Dotaciones Institucionales"
-        </h1>
+    <main className="flex items-center justify-center min-h-screen bg-lime-100">
+      <div className="w-full max-w-xs p-5 bg-white shadow-lg rounded-lg">
+        <img
+          src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1732987889/logo-dotac-1-337x133_zp5dzx.png"
+          alt="Descripción"
+          className="w-4/5 mx-auto mb-4"
+        />
 
-        <h2
-          className="colum bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-           bg-clip-text font-display text-4xl tracking-tight text-transparent text-center"
-        >
-          Iniciar sesion
-        </h2>
-
-        <form
-          className="my-10 bg-white shadow rounded-lg p-10"
-          onSubmit={onSubmit}
-        >
-          <div className="my-5">
-            <label className="uppercase text-gray-600 block text-lx font-bold">
+        <form onSubmit={onSubmit}>
+          <div>
+            <label className="uppercase text-gray-600 block text-xs font-bold">
               Nombre
             </label>
             <input
-              type="nombre"
+              type="text"
               id="nombre"
               name="nombre"
               placeholder="Ingrese su Nombre"
@@ -135,7 +117,7 @@ const CrearCuenta = () => {
               onChange={onChange}
             />
 
-            <label className="uppercase text-gray-600 block text-lx font-bold">
+            <label className="uppercase text-gray-600 block text-xs font-bold">
               Email
             </label>
             <input
@@ -148,7 +130,7 @@ const CrearCuenta = () => {
               onChange={onChange}
             />
 
-            <label className="uppercase text-gray-600 block text-lx font-bold">
+            <label className="uppercase text-gray-600 block text-xs font-bold">
               Password
             </label>
             <input
@@ -161,14 +143,14 @@ const CrearCuenta = () => {
               onChange={onChange}
             />
 
-            <label className="uppercase text-gray-600 block text-lx font-bold">
+            <label className="uppercase text-gray-600 block text-xs font-bold">
               Confirme su Password
             </label>
             <input
-              type="confirmar"
+              type="password"
               id="confirmar"
               name="confirmar"
-              placeholder="Confirmacion de de Password"
+              placeholder="Confirmación de Password"
               className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
               value={confirmar}
               onChange={onChange}
@@ -178,10 +160,10 @@ const CrearCuenta = () => {
           <input
             type="submit"
             value="Registrar Usuario"
-            className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
+            className="bg-lime-500 mb-5 w-full my-2 py-3 text-white uppercase font-bold rounded hover:cursor-pointer text-xs"
           />
 
-          <Link className="block text-center my-5" to={"/"}>
+          <Link className="block text-center font-bold" to={"/admin"}>
             Regresar
           </Link>
         </form>

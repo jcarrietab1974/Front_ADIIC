@@ -9,12 +9,14 @@ const HomeProductos = () => {
   const navigate = useNavigate();
   const { idCategoria } = useParams();
   const [productos, setProductos] = useState([]);
+
   const cargarProductos = async () => {
     const response = await crud.GET(
       `/api/productos/porcategoria/${idCategoria}`
     );
     setProductos(response);
   };
+  
   console.log(productos);
   useEffect(() => {
     cargarProductos();
