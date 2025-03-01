@@ -9,11 +9,12 @@ const CrearCuenta = () => {
   const [usuario, setUsuario] = useState({
     nombre: "",
     email: "",
+    rol: "",
     password: "",
     confirmar: "",
   });
 
-  const { nombre, email, password, confirmar } = usuario;
+  const { nombre, email, rol, password, confirmar } = usuario;
 
   const onChange = (e) => {
     setUsuario({
@@ -43,6 +44,7 @@ const CrearCuenta = () => {
       const data = {
         nombre: usuario.nombre,
         email: usuario.email,
+        rol: usuario.rol,
         password: usuario.password,
       };
       const response = await crud.POST(`/api/usuarios`, data);
@@ -80,10 +82,11 @@ const CrearCuenta = () => {
         setUsuario({
           nombre: "",
           email: "",
+          rol: "",
           password: "",
           confirmar: "",
         });
-        navigate("/login");
+        navigate("/");
       }
     }
   };
@@ -112,12 +115,12 @@ const CrearCuenta = () => {
               id="nombre"
               name="nombre"
               placeholder="Ingrese su Nombre"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+              className="w-full mt-1 p-2 border rounded-xl bg-gray-50 text-sm"
               value={nombre}
               onChange={onChange}
             />
 
-            <label className="uppercase text-gray-600 block text-xs font-bold">
+            <label className="uppercase text-gray-600 block text-xs font-bold mt-1">
               Email
             </label>
             <input
@@ -125,12 +128,25 @@ const CrearCuenta = () => {
               id="email"
               name="email"
               placeholder="Email de registro"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+              className="w-full mt-1 p-2 border rounded-xl bg-gray-50 text-sm"
               value={email}
               onChange={onChange}
             />
 
-            <label className="uppercase text-gray-600 block text-xs font-bold">
+            <label className="uppercase text-gray-600 block text-xs font-bold mt-1">
+              Rol
+            </label>
+            <input
+              type="text"
+              id="rol"
+              name="rol"
+              placeholder="Ingrese admin o regular"
+              className="w-full mt-1 p-2 border rounded-xl bg-gray-50 text-sm"
+              value={rol}
+              onChange={onChange}
+            />
+
+            <label className="uppercase text-gray-600 block text-xs font-bold mt-1">
               Password
             </label>
             <input
@@ -138,12 +154,12 @@ const CrearCuenta = () => {
               id="password"
               name="password"
               placeholder="Password de registro"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+              className="w-full mt-1 p-2 border rounded-xl bg-gray-50 text-sm"
               value={password}
               onChange={onChange}
             />
 
-            <label className="uppercase text-gray-600 block text-xs font-bold">
+            <label className="uppercase text-gray-600 block text-xs font-bold mt-1">
               Confirme su Password
             </label>
             <input
@@ -151,7 +167,7 @@ const CrearCuenta = () => {
               id="confirmar"
               name="confirmar"
               placeholder="Confirmación de Password"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+              className="w-full mt-1 p-2 border rounded-xl bg-gray-50 text-sm"
               value={confirmar}
               onChange={onChange}
             />
@@ -163,7 +179,7 @@ const CrearCuenta = () => {
             className="bg-lime-500 mb-5 w-full my-2 py-3 text-white uppercase font-bold rounded hover:cursor-pointer text-xs"
           />
 
-          <Link className="block text-center font-bold" to={"/admin"}>
+          <Link className="block text-center font-bold text-sm" to={"/admin"}>
             Regresar
           </Link>
         </form>

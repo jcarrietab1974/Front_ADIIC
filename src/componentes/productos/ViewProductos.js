@@ -16,7 +16,7 @@ export const ViewProductos = ({ producto }) => {
     const response = await crud.GET(`/api/productos/${idCategoria}`);
     setProductos(response.productos);
   };
-  console.log(productos);
+  //console.log(productos);
   useEffect(() => {
     cargarProductos();
   }, []); //Para que solo se ejecute una vez
@@ -69,7 +69,7 @@ export const ViewProductos = ({ producto }) => {
             className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded w-auto"
             onClick={() => actualizarProducto(producto._id)}
           >
-            Editar
+            Actualizar
           </button>
 
           <button

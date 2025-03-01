@@ -14,7 +14,7 @@ const Admin = () => {
     const autenticarUsuario = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login");
+        navigate("/");
       }
     };
     autenticarUsuario();
@@ -93,25 +93,34 @@ const Admin = () => {
   return (
     <>
       <Header />
-      <div className="md:flex md:min-h-screen">
-        <Sidebar />
+      <div className="md:flex md:min-h-screen bg-lime-200">
+        <div className="w-full md:w-auto">
+          <Sidebar />
+        </div>
         <main className="flex-1 p-4">
-          <h1 className="bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200 bg-clip-text font-display text-4xl tracking-tight text-transparent text-center mb-6">
+          <h1 className="text-lime-900 font-bold text-4xl tracking-tight text-center mb-6 italic">
             Lista de categorías
           </h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"> {/* Contenedor grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-4">
             {categorias.map((item) => (
-              <div key={item._id} className="bg-white rounded-lg shadow-md overflow-hidden"> {/* Tarjeta */}
-                <img
-                  src={item.imagen}
-                  alt={item.nombre}
-                  className="w-full h-auto my-1 object-cover"
-                />
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold mb-2 text-center">{item.nombre}</h2> {/*Nombre centrado*/}
-                  <p className="text-gray-600 text-center mb-4">{item._id}</p> {/*ID centrado*/}
-                  <div className="flex flex-col space-y-2">
+              <div
+                key={item._id}
+                className="bg-white rounded-lg shadow-md flex flex-col"
+              >
+                <div className="h-40 w-full overflow-hidden">
+                  <img
+                    src={item.imagen}
+                    alt={item.nombre}
+                    className="w-full h-full object-contain object-center"
+                  />
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h2 className="text-xl font-semibold mb-2 text-center">
+                    {item.nombre}
+                  </h2>
+                  <p className="text-gray-600 text-center mb-4">{item._id}</p>
+                  <div className="flex flex-col space-y-2 justify-end">
                     <button
                       className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
                       onClick={(e) => borrarCategoria(e, item._id)}
@@ -128,7 +137,7 @@ const Admin = () => {
                       className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
                       onClick={() => crearProductos(item._id)}
                     >
-                      Lista de Productos
+                      Productos
                     </button>
                   </div>
                 </div>

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import crud from "../conexiones/crud";
 import swal from "sweetalert";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ const Login = () => {
   };
 
   const ingresarCuenta = async () => {
-    // Verificar si los campos están vacíos
     if (email.trim() === "" || password.trim() === "") {
       swal({
         title: "Error",
@@ -37,13 +37,10 @@ const Login = () => {
           },
         },
       });
-      return; // Detener la ejecución si los campos están vacíos
+      return;
     }
 
-    const data = {
-      email: usuario.email,
-      password: usuario.password,
-    };
+    const data = { email, password };
     const response = await crud.POST(`/api/auth`, data);
     const mensaje = response.msg;
 
@@ -80,7 +77,32 @@ const Login = () => {
     } else {
       const jwt = response.token;
       localStorage.setItem("token", jwt);
-      navigate("/admin");
+
+      // Decodificar el token
+      const decoded = jwtDecode(jwt);
+      const rol = decoded.usuario.rol.toLowerCase(); // Asegurar que el rol esté correctamente en el token
+
+      // Redirigir según el rol
+      if (rol === "admin") {
+        navigate("/admin");
+      } else if (rol === "regular") {
+        navigate("/regular");
+      } else {
+        swal({
+          title: "Error",
+          text: "Rol de usuario no reconocido.",
+          icon: "error",
+          button: {
+            confirm: {
+              text: "OK",
+              value: true,
+              visible: true,
+              className: "btn btn-danger",
+              closeModal: true,
+            },
+          },
+        });
+      }
     }
   };
 
@@ -90,62 +112,53 @@ const Login = () => {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-lime-100">
-      <div className="w-full max-w-md p-5">
-        <img
-          src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1732987889/logo-dotac-1-337x133_zp5dzx.png"
-          alt="Descripción"
-          className="w-3xs mx-auto"
-        />
-
-        <form
-          onSubmit={onSubmit}
-          className="my-3 bg-white shadow rounded-lg p-10"
-        >
-          <div className="my-4">
-            <label className="uppercase text-gray-600 block text-lx font-bold">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email de registro"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              value={email}
-              onChange={onChange}
-            />
-            <br />
-            <label className="uppercase text-gray-600 block text-lx font-bold">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password de registro"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              value={password}
-              onChange={onChange}
-            />
-          </div>
-
+    <section className="flex items-center justify-center">
+      <form
+        onSubmit={onSubmit}
+        className="shadow-lg rounded-lg mb-3 p-5 bg-lime-200 w-full max-w-sm"
+      >
+        <div className="my-4">
+          <label
+            htmlFor="email"
+            className="uppercase text-gray-600 block text-sm font-bold text-left"
+          >
+            Email
+          </label>
           <input
-            type="submit"
-            value="Iniciar Sesión"
-            className="bg-lime-500 my-1 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Email de registro"
+            className="w-full mt-3 p-3 border rounded-xl bg-gray-50 text-sm"
+            value={usuario.email}
+            onChange={onChange}
           />
-          <Link className="block text-center my-1 font-bold" to={"/"}>
-            Regresar
-          </Link>
-        </form>
-      </div>
-    </main>
+
+          <label
+            htmlFor="password"
+            className="uppercase text-gray-600 block text-sm font-bold text-left mt-3"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password de registro"
+            className="w-full mt-3 p-3 border rounded-xl bg-gray-50 text-sm"
+            value={usuario.password}
+            onChange={onChange}
+          />
+        </div>
+
+        <input
+          type="submit"
+          value="Iniciar Sesión"
+          className="bg-lime-500 my-1 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer text-sm"
+        />
+      </form>
+    </section>
   );
 };
 
 export default Login;
-
-/* <h2 className="bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200 bg-clip-text font-display text-4xl tracking-tight text-transparent text-center">
-          Iniciar sesión
-        </h2>*/
