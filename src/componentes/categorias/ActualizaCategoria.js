@@ -70,12 +70,11 @@ const ActualizarCategoria = () => {
         <Sidebar />
         <main className="flex-1">
           <div className="mt-2 flex justify-center">
-            <h1
-              className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-                    bg-clip-text text-4xl tracking-tight text-transparent text-center"
+            <p
+              className="inline bg-lime-900 bg-clip-text text-4xl tracking-tight text-center"
             >
               Actualizar Categoria
-            </h1>
+            </p>
           </div>
           <div className="mt-2 flex justify-center">
             <form

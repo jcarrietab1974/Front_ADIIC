@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import crud from "../conexiones/crud";
 import swal from "sweetalert";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 
 const CrearCategoria = () => {
   const navigate = useNavigate();
@@ -21,14 +23,11 @@ const CrearCategoria = () => {
   };
 
   const ingresarCategoria = async () => {
-    const data = {
-      nombre: categoria.nombre,
-      imagen: categoria.imagen,
-    };
+    const data = { nombre, imagen };
     await crud.POST("/api/categorias", data);
     swal({
       title: "Información",
-      text: "La categoria se creó correctamente",
+      text: "La categoría se creó correctamente",
       icon: "success",
       button: {
         confirm: {
@@ -51,51 +50,52 @@ const CrearCategoria = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-lime-100">
-        <main className="flex flex-col items-center justify-center w-full max-w-xs p-10 bg-white shadow rounded-lg">
-          <img
-            src="https://res.cloudinary.com/dv84nv8y0/image/upload/v1732987889/logo-dotac-1-337x133_zp5dzx.png"
-            alt="Descripción"
-            className="w-3xs mx-auto"
-          />
-          <form onSubmit={onSubmit} className="w-full">
-            <div className="my-5">
-              <label className="uppercase text-gray-600 block text-xs font-bold">
-                Nombre de la Categoria
-              </label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                placeholder="Ingrese la Categoria"
-                className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                value={nombre}
-                onChange={onChange}
-              />
+      <Header />
+      <div className="md:flex md:min-h-screen">
+        <Sidebar />
+        <main className="flex-1 flex flex-col items-center bg-lime-200 p-6">
+          <h1 className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
+            Crear Categoría
+          </h1>
+          <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div>
+                <label className="uppercase text-gray-600 block text-sm font-bold">
+                  Nombre de la Categoría
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  placeholder="Ingrese la Categoría"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                  value={nombre}
+                  onChange={onChange}
+                />
+              </div>
 
-              <label className="uppercase text-gray-600 block text-xs font-bold mt-4">
-                Imagen de la Categoria
-              </label>
-              <input
-                type="text"
-                id="imagen"
-                name="imagen"
-                placeholder="Imagen"
-                className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-                value={imagen}
-                onChange={onChange}
-              />
-            </div>
+              <div>
+                <label className="uppercase text-gray-600 block text-sm font-bold">
+                  Imagen de la Categoría
+                </label>
+                <input
+                  type="text"
+                  id="imagen"
+                  name="imagen"
+                  placeholder="URL de la Imagen"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                  value={imagen}
+                  onChange={onChange}
+                />
+              </div>
 
-            <input
-              type="submit"
-              value="Crear Categoria"
-              className="bg-lime-500 mb-5 w-full py-3 text-black uppercase font-bold rounded hover:cursor-pointer"
-            />
-            <Link className="block text-center font-bold" to={"/admin"}>
-              Regresar
-            </Link>
-          </form>
+              <input
+                type="submit"
+                value="Crear Categoría"
+                className="bg-lime-500 w-full py-3 text-black uppercase font-bold rounded hover:bg-lime-600 transition-colors text-sm"
+              />
+            </form>
+          </div>
         </main>
       </div>
     </>

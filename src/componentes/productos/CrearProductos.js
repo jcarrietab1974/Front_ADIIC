@@ -68,22 +68,19 @@ const CrearProductos = () => {
       <Header />
       <div className="md:flex md:min-h-screen">
         <Sidebar />
-        <main className="flex-1">
-          <div className="mt-2 flex justify-center">
-            <h1
-              className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-                    bg-clip-text text-4xl tracking-tight text-transparent text-center"
-            >
-              Crear Productos
-            </h1>
+        <main className="flex-1 bg-lime-200">
+          <div className="flex justify-center">
+          <h1 className="text-lime-900 font-bold text-3xl tracking-tight text-center italic">
+            Crear Productos
+          </h1>
           </div>
-          <div className="mt-2 flex justify-center">
+          <div className="flex justify-center">
             <form
               onSubmit={onSubmit}
-              className="my-2 bg-white shadow rounded-lg p-10"
+              className="bg-lime-300 shadow rounded-lg p-8 my-3"
             >
-              <div className="my-5">
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+              <div>
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Nombre del producto
                 </label>
                 <input
@@ -91,12 +88,12 @@ const CrearProductos = () => {
                   id="nombre"
                   name="nombre"
                   placeholder="Ingrese el producto"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
                   value={nombre}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Descripcion del producto
                 </label>
                 <input
@@ -104,12 +101,12 @@ const CrearProductos = () => {
                   id="descripcion"
                   name="descripcion"
                   placeholder="descripcion"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
                   value={descripcion}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Stock del producto
                 </label>
                 <input
@@ -117,12 +114,12 @@ const CrearProductos = () => {
                   id="stock"
                   name="stock"
                   placeholder="stock"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
                   value={stock}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Precio del producto
                 </label>
                 <input
@@ -130,12 +127,12 @@ const CrearProductos = () => {
                   id="precio"
                   name="precio"
                   placeholder="precio"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
                   value={precio}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Imagen del producto
                 </label>
                 <input
@@ -143,7 +140,7 @@ const CrearProductos = () => {
                   id="imagen"
                   name="imagen"
                   placeholder="Imagen del producto"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
                   value={imagen}
                   onChange={onChange}
                 />
@@ -151,7 +148,7 @@ const CrearProductos = () => {
               <input
                 type="submit"
                 value="Crear Productos"
-                className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
+                className="bg-lime-500 w-full my-2 py-2 text-white uppercase font-bold rounded hover:cursor-pointer"
               />
             </form>
           </div>

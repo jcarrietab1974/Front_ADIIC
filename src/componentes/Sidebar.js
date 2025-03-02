@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = ({ idCategoria = null }) => {
   const linkStyles =
-    "bg-lime-500 w-full p-3 text-white uppercase font-bold text-center rounded-lg flex justify-center mt-3";
+    "bg-lime-500 w-full p-3 text-white uppercase font-bold text-center rounded-lg flex justify-center mt-3 hover:bg-lime-700 transition duration-300";
 
   return (
     <aside className="md:w-60 lg:w-60 px-6 py-6 bg-lime-200 flex flex-col items-center min-h-[200px]">
