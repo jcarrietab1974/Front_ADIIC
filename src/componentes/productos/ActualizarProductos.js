@@ -113,22 +113,14 @@ const ActualizarProductos = () => {
       <Header />
       <div className="md:flex md:min-h-screen">
         <Sidebar />
-        <main className="flex-1">
-          <div className="mt-2 flex justify-center">
-            <h1
-              className="inline bg-gradient-to-r from-indigo-200 via-violet-700 to-indigo-200
-                    bg-clip-text text-4xl tracking-tight text-transparent text-center"
-            >
-              {idProducto ? "Actualizar Producto" : "Crear Productos"}
-            </h1>
-          </div>
-          <div className="mt-2 flex justify-center">
-            <form
-              onSubmit={onSubmit}
-              className="my-2 bg-white shadow rounded-lg p-10"
-            >
-              <div className="my-5">
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+        <main className="flex-1 flex flex-col items-center bg-lime-200 p-6">
+          <p className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
+            {idProducto ? "Actualizar Producto" : "Crear Productos"}
+          </p>
+          <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div>
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Nombre del producto
                 </label>
                 <input
@@ -136,12 +128,12 @@ const ActualizarProductos = () => {
                   id="nombre"
                   name="nombre"
                   placeholder="Ingrese el producto"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={nombre}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Descripcion del producto
                 </label>
                 <input
@@ -149,12 +141,12 @@ const ActualizarProductos = () => {
                   id="descripcion"
                   name="descripcion"
                   placeholder="descripcion"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={descripcion}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Stock del producto
                 </label>
                 <input
@@ -162,12 +154,12 @@ const ActualizarProductos = () => {
                   id="stock"
                   name="stock"
                   placeholder="stock"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={stock}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Precio del producto
                 </label>
                 <input
@@ -175,12 +167,12 @@ const ActualizarProductos = () => {
                   id="precio"
                   name="precio"
                   placeholder="precio"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={precio}
                   onChange={onChange}
                 />
 
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Imagen del producto
                 </label>
                 <input
@@ -188,7 +180,7 @@ const ActualizarProductos = () => {
                   id="imagen"
                   name="imagen"
                   placeholder="Imagen del producto"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={imagen}
                   onChange={onChange}
                 />
@@ -196,7 +188,7 @@ const ActualizarProductos = () => {
               <input
                 type="submit"
                 value="Actualizar Producto"
-                className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
+                className="bg-lime-500 hover:bg-lime-700 transition duration-300 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
               />
             </form>
           </div>

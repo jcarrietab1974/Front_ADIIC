@@ -50,7 +50,7 @@ const ActualizarCategoria = () => {
           text: "OK",
           value: true,
           visible: true,
-          className: "btn btn-primary",
+          className: "btn btn-primary ",
           closeModal: true,
         },
       },
@@ -68,34 +68,26 @@ const ActualizarCategoria = () => {
       <Header />
       <div className="md:flex md:min-h-screen">
         <Sidebar />
-        <main className="flex-1">
-          <div className="mt-2 flex justify-center">
-            <p
-              className="inline bg-lime-900 bg-clip-text text-4xl tracking-tight text-center"
-            >
-              Actualizar Categoria
-            </p>
-          </div>
-          <div className="mt-2 flex justify-center">
-            <form
-              onSubmit={onSubmit}
-              className="my-2 bg-white shadow rounded-lg p-10"
-            >
-              <div className="my-5">
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+        <main className="flex-1 flex flex-col items-center bg-lime-200 p-6">
+          <p className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
+            Actualizar Categoria
+          </p>
+          <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div>
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Nombre de la Categoria
                 </label>
                 <input
-                  type="nombre"
+                  type="text"
                   id="nombre"
                   name="nombre"
                   placeholder="Ingrese la Categoria"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={nombre}
                   onChange={onChange}
                 />
-
-                <label className="uppercase text-gray-600 block text-lx font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold">
                   Imagen de la Categoria
                 </label>
                 <input
@@ -111,7 +103,7 @@ const ActualizarCategoria = () => {
               <input
                 type="submit"
                 value="Actualizar Categoria"
-                className="bg-violet-600 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
+                className="bg-lime-500 hover:bg-lime-700 transition duration-300 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
               />
             </form>
           </div>

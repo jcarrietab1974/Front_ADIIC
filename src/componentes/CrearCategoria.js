@@ -51,12 +51,12 @@ const CrearCategoria = () => {
   return (
     <>
       <Header />
-      <div className="md:flex md:min-h-screen">
+      <div className="md:flex md:min-h-screen bg-lime-200">
         <Sidebar />
         <main className="flex-1 flex flex-col items-center bg-lime-200 p-6">
-          <h1 className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
+          <p className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
             Crear Categoría
-          </h1>
+          </p>
           <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
             <form onSubmit={onSubmit} className="space-y-4">
               <div>

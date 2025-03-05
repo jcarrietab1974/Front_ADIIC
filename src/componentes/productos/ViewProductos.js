@@ -16,7 +16,9 @@ export const ViewProductos = ({ producto }) => {
     const response = await crud.GET(`/api/productos/${idCategoria}`);
     setProductos(response.productos);
   };
-  //console.log(productos);
+
+  console.log(productos);
+
   useEffect(() => {
     cargarProductos();
   }, []); //Para que solo se ejecute una vez
@@ -45,13 +47,14 @@ export const ViewProductos = ({ producto }) => {
       }
     });
   };
+
   const actualizarProducto = async (e, idProducto) => {
     navigate(`/actualizar-producto/${idProducto}`);
   };
 
   return (
-    <div className="border-b p-5 w-full md:w-2/3 lg:w-3/4 mx-auto flex flex-col lg:flex-row items-center gap-4"> {/* Ajuste en w-full y lg:flex-row */}
-      <div className="w-full lg:w-1/3 flex justify-center lg:justify-start"> {/* Contenedor para la imagen */}
+    <div className="border-b p-5 w-full md:w-2/3 lg:w-3/4 mx-auto flex flex-col lg:flex-row items-center gap-4">
+      <div className="w-full lg:w-1/3 flex justify-center lg:justify-start">
         <img
           src={imagen}
           alt="imagen-producto"
@@ -59,17 +62,21 @@ export const ViewProductos = ({ producto }) => {
         />
       </div>
 
-      <div className="flex flex-col flex-grow lg:flex-grow-0 items-start w-full lg:w-2/3"> {/* Contenedor para la información */}
-        <p className="mb-1 text-lg text-gray-50 break-words">Nombre: {nombre}</p>
-        <p className="mb-1 text-lg text-gray-50 break-words">Descripción: {descripcion}</p>
+      <div className="flex flex-col flex-grow lg:flex-grow-0 items-start w-full lg:w-2/3">
+        <p className="mb-1 text-lg text-gray-50 break-words">
+          Nombre: {nombre}
+        </p>
+        <p className="mb-1 text-lg text-gray-50 break-words">
+          Descripción: {descripcion}
+        </p>
         <p className="mb-1 text-lg text-gray-50">Stock: {stock}</p>
         <p className="mb-1 text-lg text-gray-50">Precio: ${precio}</p>
         <div className="flex flex-row flex-wrap mt-4 gap-2 w-full justify-center lg:justify-start">
           <button
-            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded w-auto"
-            onClick={() => actualizarProducto(producto._id)}
+            className="bg-lime-300 hover:bg-lime-900 text-black font-bold py-2 px-4 rounded w-auto"
+            onClick={(e) => actualizarProducto(e, producto._id)}
           >
-            Actualizar
+            Editar
           </button>
 
           <button
@@ -83,5 +90,4 @@ export const ViewProductos = ({ producto }) => {
     </div>
   );
 };
-
 export default ViewProductos;

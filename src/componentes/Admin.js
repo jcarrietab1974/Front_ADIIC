@@ -94,13 +94,11 @@ const Admin = () => {
     <>
       <Header />
       <div className="md:flex md:min-h-screen bg-lime-200">
-        <div className="w-full md:w-auto">
-          <Sidebar />
-        </div>
+        <Sidebar />
         <main className="flex-1 p-4">
-          <h1 className="text-lime-900 font-bold text-4xl tracking-tight text-center mb-6 italic">
-            Lista de categorías
-          </h1>
+          <p className="text-lime-900 font-bold text-4xl tracking-tight text-center mb-6 italic">
+            Lista de Categorías
+          </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-4">
             {categorias.map((item) => (
@@ -112,7 +110,7 @@ const Admin = () => {
                   <img
                     src={item.imagen}
                     alt={item.nombre}
-                    className="w-full h-full object-contain object-center"
+                    className="w-full h-full object-contain object-center my-1"
                   />
                 </div>
                 <div className="p-4 flex flex-col flex-grow">

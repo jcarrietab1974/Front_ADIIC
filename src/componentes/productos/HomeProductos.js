@@ -1,35 +1,28 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import crud from "../../conexiones/crud";
 import ViewProductos from "./ViewProductos";
 
 const HomeProductos = () => {
   const navigate = useNavigate();
   const { idCategoria } = useParams();
+
   const [productos, setProductos] = useState([]);
 
-  // Función para cargar productos con useCallback
-  const cargarProductos = useCallback(async () => {
-    try {
-      const response = await crud.GET(
-        `/api/productos/porcategoria/${idCategoria}`
-      );
-      if (Array.isArray(response)) {
-        setProductos(response);
-      } else {
-        console.error("Respuesta inesperada del servidor:", response);
-        setProductos([]);
-      }
-    } catch (error) {
-      console.error("Error al cargar productos:", error);
-    }
-  }, [idCategoria]);
+  const cargarProductos = async () => {
+    const response = await crud.GET(
+      `/api/productos/porcategoria/${idCategoria}`
+    );
+    setProductos(response);
+  };
+
+  console.log(productos);
 
   useEffect(() => {
     cargarProductos();
-  }, [cargarProductos]);
+  }, []); //Para que solo se ejecute una vez
 
   return (
     <>
@@ -38,9 +31,9 @@ const HomeProductos = () => {
         <Sidebar idCategoria={idCategoria} className="self-start" />
         <main className="flex-1 py-4">
           <div className="mt-2 flex justify-center">
-            <h1 className="text-lime-900 font-bold text-4xl tracking-tight text-center mb-6 italic">
+            <p className="text-lime-900 font-bold text-4xl tracking-tight text-center mb-6 italic">
               Lista de Productos
-            </h1>
+            </p>
           </div>
 
           <div className="bg-lime-500 shadow mt-5 rounded-lg w-4/5 mx-auto my-2 p-4">

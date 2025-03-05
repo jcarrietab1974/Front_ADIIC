@@ -68,27 +68,22 @@ const CrearProductos = () => {
       <Header />
       <div className="md:flex md:min-h-screen">
         <Sidebar />
-        <main className="flex-1 bg-lime-200">
-          <div className="flex justify-center">
-          <h1 className="text-lime-900 font-bold text-3xl tracking-tight text-center italic">
-            Crear Productos
-          </h1>
-          </div>
-          <div className="flex justify-center">
-            <form
-              onSubmit={onSubmit}
-              className="bg-lime-300 shadow rounded-lg p-8 my-3"
-            >
+        <main className="flex-1 flex flex-col items-center bg-lime-200 p-6">
+          <p className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
+            Crear Producto
+          </p>
+          <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
+            <form onSubmit={onSubmit} className="space-y-4">
               <div>
                 <label className="uppercase text-gray-600 block text-sm font-bold">
                   Nombre del producto
                 </label>
                 <input
-                  type="nombre"
+                  type="text"
                   id="nombre"
                   name="nombre"
                   placeholder="Ingrese el producto"
-                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={nombre}
                   onChange={onChange}
                 />
@@ -101,7 +96,7 @@ const CrearProductos = () => {
                   id="descripcion"
                   name="descripcion"
                   placeholder="descripcion"
-                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={descripcion}
                   onChange={onChange}
                 />
@@ -114,7 +109,7 @@ const CrearProductos = () => {
                   id="stock"
                   name="stock"
                   placeholder="stock"
-                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={stock}
                   onChange={onChange}
                 />
@@ -127,7 +122,7 @@ const CrearProductos = () => {
                   id="precio"
                   name="precio"
                   placeholder="precio"
-                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={precio}
                   onChange={onChange}
                 />
@@ -140,7 +135,7 @@ const CrearProductos = () => {
                   id="imagen"
                   name="imagen"
                   placeholder="Imagen del producto"
-                  className="w-full my-1 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={imagen}
                   onChange={onChange}
                 />
@@ -148,7 +143,7 @@ const CrearProductos = () => {
               <input
                 type="submit"
                 value="Crear Productos"
-                className="bg-lime-500 w-full my-2 py-2 text-white uppercase font-bold rounded hover:cursor-pointer"
+                className="bg-lime-500 w-full py-3 text-black uppercase font-bold rounded hover:bg-lime-600 transition-colors text-sm"
               />
             </form>
           </div>

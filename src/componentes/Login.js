@@ -112,15 +112,12 @@ const Login = () => {
   };
 
   return (
-    <section className="flex items-center justify-center">
-      <form
-        onSubmit={onSubmit}
-        className="shadow-lg rounded-lg mb-3 p-5 bg-lime-200 w-full max-w-sm"
-      >
-        <div className="my-4">
+    <section className="flex-1 flex flex-col items-center bg-lime-200 p-6 rounded-xl my-2">
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div>
           <label
             htmlFor="email"
-            className="uppercase text-gray-600 block text-sm font-bold text-left"
+            className="uppercase text-gray-600 block text-sm font-bold text-left mt-3"
           >
             Email
           </label>
