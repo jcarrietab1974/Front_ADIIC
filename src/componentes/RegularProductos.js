@@ -18,17 +18,21 @@ const RegularProductos = () => {
       const categoriaResponse = await crud.GET(`/api/categorias/${id}`);
       setCategoria(categoriaResponse.categoria || null);
 
-      // Obtener productos de la categoría seleccionada (AJUSTE DE ENDPOINT)
-      const productosResponse = await crud.GET(`/api/productos/porcategoria/${id}`);
-      
-      if (productosResponse && Array.isArray(productosResponse.productos)) {
-        setProductos(productosResponse.productos);
-      } else {
+      // Obtener productos de la categoría seleccionada
+      const productosResponse = await crud.GET(
+        `/api/productos/porcategoria/${id}`
+      );
+
+      console.log("Respuesta completa de la API:", productosResponse);
+
+      if (!Array.isArray(productosResponse)) {
         console.error("Respuesta inesperada de la API:", productosResponse);
         setProductos([]);
+      } else {
+        setProductos(productosResponse); // ✅ Asignar directamente el array de productos
       }
     } catch (error) {
-      setError(error);
+      setError(error.message);
       console.error("Error al cargar datos:", error);
     } finally {
       setLoading(false);
@@ -56,9 +60,9 @@ const RegularProductos = () => {
       <Header />
       <main className="flex-1 w-full p-4 md:p-6 lg:p-8 bg-lime-200 min-h-screen">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-          <h1 className="text-lime-900 font-bold text-2xl md:text-3xl tracking-tight italic text-center md:text-left">
+          <p className="text-lime-900 font-bold text-2xl md:text-3xl tracking-tight italic text-center md:text-left">
             Productos de {categoria?.nombre || "Categoría"}
-          </h1>
+          </p>
           <Link
             to="/regular"
             className="bg-lime-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-lime-700 transition duration-300 mt-4 md:mt-0"
@@ -78,28 +82,28 @@ const RegularProductos = () => {
               {productos.map((producto) => (
                 <div
                   key={producto._id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden"
+                  className="bg-lime-200 rounded-lg shadow-sm overflow-hidden"
                 >
                   <div className="relative h-64">
                     <img
                       src={producto.imagen}
-                      alt={producto.nombre}
+                      alt="imagen-producto"
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <p className="mb-1 text-lg text-black break-words font-bold">
                       {producto.nombre}
-                    </h3>
-                    <p className="text-gray-600 text-sm mt-1">
+                    </p>
+                    <p className="mb-1 text-sm text-black break-words font-bold">
+                      {producto.descripcion}
+                    </p>
+                    <p className="mb-1 text-sm text-black break-words font-bold">
                       Stock: {producto.stock}
                     </p>
-                    <p className="text-gray-900 font-semibold mt-2">
-                      ${producto.precio}
+                    <p className="mb-1 text-sm text-black break-words font-bold">
+                      Precio: ${producto.precio}
                     </p>
-                    <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                      Añadir al carrito
-                    </button>
                   </div>
                 </div>
               ))}

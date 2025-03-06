@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import crud from "../../conexiones/crud";
 import ViewProductos from "./ViewProductos";
 
