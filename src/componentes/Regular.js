@@ -9,14 +9,13 @@ const Regular = () => {
   const [categorias, setCategorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Verificar autenticación antes de cargar datos
   useEffect(() => {
-    const autenticarUsuario = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/");
-      }
-    };
-    autenticarUsuario();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return; // Detener la ejecución si el usuario no está autenticado
+    }
   }, [navigate]);
 
   const cargarCategorias = async () => {
@@ -54,8 +53,6 @@ const Regular = () => {
       <Header />
       <main className="flex-1 w-full p-4 md:p-6 lg:p-8 bg-lime-200">
         <div className="text-center mb-8">
-          {" "}
-          {/* Contenedor para centrar el texto */}
           <h1 className="text-lime-900 font-bold text-3xl tracking-tight text-center mb-6 italic">
             Panel de vendedores
           </h1>
@@ -67,20 +64,17 @@ const Regular = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categorias.map((category) => (
               <a
-                key={category.nombre}
+                key={category._id}
                 href={category.href}
                 className="relative block rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition duration-300"
               >
                 <div className="relative h-64">
-                  {" "}
-                  {/* Altura fija para las imágenes */}
                   <img
                     src={category.imagen}
                     alt={category.nombre}
                     className="absolute inset-0 w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-black opacity-30"></div>{" "}
-                  {/* Oscurecimiento de la imagen */}
+                  <div className="absolute inset-0 bg-black opacity-30"></div>
                 </div>
                 <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
                   <h3 className="text-xl font-bold text-white">
@@ -88,7 +82,7 @@ const Regular = () => {
                   </h3>
                   <Link
                     className="bg-lime-500 w-full p-3 text-white uppercase font-bold mt-5 text-center rounded-lg flex justify-center"
-                    to={`/regproducto/${category._id}`} // Pasar el ID de la categoría en la URL
+                    to={`/regproducto/${category._id}`}
                   >
                     Productos
                   </Link>

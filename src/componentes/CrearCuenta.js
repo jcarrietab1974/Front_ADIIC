@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import crud from "../conexiones/crud";
@@ -7,6 +7,16 @@ import Sidebar from "./Sidebar";
 
 const CrearCuenta = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const autenticarUsuario = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+      }
+    };
+    autenticarUsuario();
+  }, [navigate]);
 
   const [usuario, setUsuario] = useState({
     nombre: "",

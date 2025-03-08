@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import crud from "../conexiones/crud";
 import swal from "sweetalert";
@@ -7,6 +7,13 @@ import Sidebar from "./Sidebar";
 
 const CrearCategoria = () => {
   const navigate = useNavigate();
+
+  // Verifica si el usuario está autenticado
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []); // Se ejecuta solo una vez al montar el componente
 
   const [categoria, setCategoria] = useState({
     nombre: "",
@@ -23,24 +30,27 @@ const CrearCategoria = () => {
   };
 
   const ingresarCategoria = async () => {
-    const data = { nombre, imagen };
-    await crud.POST("/api/categorias", data);
-    swal({
-      title: "Información",
-      text: "La categoría se creó correctamente",
-      icon: "success",
-      button: {
-        confirm: {
+    try {
+      const data = { nombre, imagen };
+      await crud.POST("/api/categorias", data);
+      swal({
+        title: "Información",
+        text: "La categoría se creó correctamente",
+        icon: "success",
+        button: {
           text: "OK",
-          value: true,
-          visible: true,
           className: "btn btn-primary",
-          closeModal: true,
         },
-      },
-    });
+      });
 
-    navigate("/admin");
+      navigate("/admin");
+    } catch (error) {
+      swal({
+        title: "Error",
+        text: "Hubo un problema al crear la categoría",
+        icon: "error",
+      });
+    }
   };
 
   const onSubmit = (e) => {

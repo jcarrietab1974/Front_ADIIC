@@ -1,28 +1,45 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import { useNavigate, useParams } from "react-router-dom";
 import crud from "../../conexiones/crud";
 import ViewProductos from "./ViewProductos";
 
 const HomeProductos = () => {
   const navigate = useNavigate();
   const { idCategoria } = useParams();
-
   const [productos, setProductos] = useState([]);
-
-  const cargarProductos = async () => {
-    const response = await crud.GET(
-      `/api/productos/porcategoria/${idCategoria}`
-    );
-    setProductos(response);
-  };
-
-  console.log(productos);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Inicializa en false
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return; // Evita que el resto del efecto se ejecute
+    }
+    setIsAuthenticated(true);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return; // No cargar productos si no está autenticado
+
+    const cargarProductos = async () => {
+      try {
+        const response = await crud.GET(
+          `/api/productos/porcategoria/${idCategoria}`
+        );
+        setProductos(response);
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+      }
+    };
+
     cargarProductos();
-  }, []); //Para que solo se ejecute una vez
+  }, [idCategoria, isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return null; // Evita mostrar la UI hasta que se resuelva la autenticación
+  }
 
   return (
     <>
@@ -35,7 +52,6 @@ const HomeProductos = () => {
               Lista de Productos
             </p>
           </div>
-
           <div className="bg-lime-500 shadow mt-5 rounded-lg w-4/5 mx-auto my-2 p-4">
             {productos.length > 0 ? (
               productos.map((producto) => (

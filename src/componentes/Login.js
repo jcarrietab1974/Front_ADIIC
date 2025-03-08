@@ -1,88 +1,82 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import crud from "../conexiones/crud";
 import swal from "sweetalert";
 import { jwtDecode } from "jwt-decode";
 
+// ✅ Esquema de validación con Yup
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Correo electrónico no válido")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|co|es|info|biz)$/,
+      "Dominio no permitido"
+    )
+    .required("El correo es obligatorio"),
+  password: yup
+    .string()
+    .min(5, "La contraseña debe tener al menos 5 caracteres")
+    .required("La contraseña es obligatoria"),
+});
+
 const Login = () => {
   const navigate = useNavigate();
 
-  const [usuario, setUsuario] = useState({
-    email: "",
-    password: "",
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  // ✅ useForm con validación de Yup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
   });
 
-  const { email, password } = usuario;
+  // ✅ Función para manejar el login
+  const ingresarCuenta = async (data) => {
+    try {
+      const response = await crud.POST(`/api/auth`, data);
+      const mensaje = response.msg;
 
-  const onChange = (e) => {
-    setUsuario({
-      ...usuario,
-      [e.target.name]: e.target.value,
-    });
-  };
+      if (mensaje === "El usuario no existe") {
+        swal({
+          title: "Error",
+          text: "El usuario no está registrado.",
+          icon: "error",
+          button: "OK",
+        });
+        return;
+      }
 
-  const ingresarCuenta = async () => {
-    if (email.trim() === "" || password.trim() === "") {
-      swal({
-        title: "Error",
-        text: "Por favor, ingrese el correo electrónico y la contraseña.",
-        icon: "warning",
-        button: {
-          confirm: {
-            text: "OK",
-            value: true,
-            visible: true,
-            className: "btn btn-danger",
-            closeModal: true,
-          },
-        },
-      });
-      return;
-    }
+      if (mensaje === "Password incorrecto") {
+        swal({
+          title: "Error",
+          text: "La contraseña ingresada es incorrecta.",
+          icon: "error",
+          button: "OK",
+        });
+        return;
+      }
 
-    const data = { email, password };
-    const response = await crud.POST(`/api/auth`, data);
-    const mensaje = response.msg;
-
-    if (mensaje === "El usuario no existe") {
-      swal({
-        title: "Error",
-        text: "El usuario no existe",
-        icon: "error",
-        button: {
-          confirm: {
-            text: "OK",
-            value: true,
-            visible: true,
-            className: "btn btn-danger",
-            closeModal: true,
-          },
-        },
-      });
-    } else if (mensaje === "Password incorrecto") {
-      swal({
-        title: "Error",
-        text: "Password incorrecto",
-        icon: "error",
-        button: {
-          confirm: {
-            text: "OK",
-            value: true,
-            visible: true,
-            className: "btn btn-danger",
-            closeModal: true,
-          },
-        },
-      });
-    } else {
+      // ✅ Guardar el token y redirigir
       const jwt = response.token;
       localStorage.setItem("token", jwt);
 
-      // Decodificar el token
+      // ✅ Decodificar token para obtener el rol del usuario
       const decoded = jwtDecode(jwt);
-      const rol = decoded.usuario.rol.toLowerCase(); // Asegurar que el rol esté correctamente en el token
+      const rol = decoded.usuario.rol.toLowerCase();
 
-      // Redirigir según el rol
+      // ✅ Redirigir según el rol
       if (rol === "admin") {
         navigate("/admin");
       } else if (rol === "regular") {
@@ -92,67 +86,59 @@ const Login = () => {
           title: "Error",
           text: "Rol de usuario no reconocido.",
           icon: "error",
-          button: {
-            confirm: {
-              text: "OK",
-              value: true,
-              visible: true,
-              className: "btn btn-danger",
-              closeModal: true,
-            },
-          },
+          button: "OK",
         });
       }
+    } catch (error) {
+      swal({
+        title: "Error",
+        text: "Hubo un problema en la autenticación.",
+        icon: "error",
+        button: "OK",
+      });
+      console.error("Error en login:", error);
     }
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    ingresarCuenta();
   };
 
   return (
     <section className="flex-1 flex flex-col items-center bg-lime-200 p-6 rounded-xl my-2">
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div>
-          <label
-            htmlFor="email"
-            className="uppercase text-gray-600 block text-sm font-bold text-left mt-3"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Email de registro"
-            className="w-full mt-3 p-3 border rounded-xl bg-gray-50 text-sm"
-            value={usuario.email}
-            onChange={onChange}
-          />
-
-          <label
-            htmlFor="password"
-            className="uppercase text-gray-600 block text-sm font-bold text-left mt-3"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password de registro"
-            className="w-full mt-3 p-3 border rounded-xl bg-gray-50 text-sm"
-            value={usuario.password}
-            onChange={onChange}
-          />
-        </div>
-
+      <form
+        onSubmit={handleSubmit(ingresarCuenta)}
+        className="space-y-4 w-full max-w-sm"
+      >
+        {/* Email */}
+        <label className="block text-gray-600 text-lg font-bold">Email</label>
         <input
-          type="submit"
-          value="Iniciar Sesión"
-          className="bg-lime-500 my-1 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer text-sm"
+          type="email"
+          {...register("email")}
+          placeholder="ejemplo@correo.com"
+          className="w-full p-3 border rounded-xl bg-gray-50 text-sm"
         />
+        {errors.email && (
+          <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+        )}
+
+        {/* Password */}
+        <label className="block text-gray-600 text-lg font-bold mt-3">
+          Password
+        </label>
+        <input
+          type="password"
+          {...register("password")}
+          placeholder="Mínimo 5 caracteres"
+          className="w-full p-3 border rounded-xl bg-gray-50 text-sm"
+        />
+        {errors.password && (
+          <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
+        )}
+
+        {/* Botón de enviar */}
+        <button
+          type="submit"
+          className="bg-lime-500 my-1 w-full py-3 text-white uppercase font-bold rounded hover:bg-lime-600"
+        >
+          Iniciar Sesión
+        </button>
       </form>
     </section>
   );

@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import { useNavigate, useParams } from "react-router-dom";
 import crud from "../../conexiones/crud";
 import swal from "sweetalert";
 
 const CrearProductos = () => {
   const navigate = useNavigate();
   const { idCategoria } = useParams();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
+
   const [categoria, setCategoria] = useState({
     nombre: "",
     descripcion: "",
@@ -27,35 +35,44 @@ const CrearProductos = () => {
   };
 
   const ingresarCategoria = async () => {
-    const data = {
-      nombre: categoria.nombre,
-      descripcion: categoria.descripcion,
-      stock: categoria.stock,
-      precio: categoria.precio,
-      imagen: categoria.imagen,
-      categoriaId: idCategoria,
-    };
-    //console.log(data);
-    const response = await crud.POST("/api/productos", data);
-    const mensaje = response.msg;
-    const mensaje1 = "El producto se creo correctamente";
-    swal({
-      title: "Información",
-      text: mensaje1,
-      icon: "success",
-      button: {
-        confirm: {
-          text: "OK",
-          value: true,
-          visible: true,
-          className: "btn btn-primary",
-          closeModal: true,
-        },
-      },
-    });
+    try {
+      const data = {
+        nombre,
+        descripcion,
+        stock,
+        precio,
+        imagen,
+        categoriaId: idCategoria,
+      };
 
-    //Redireccionar nuevamente a la pagina de home-productos
-    navigate(`/home-productos/${idCategoria}`);
+      const response = await crud.POST("/api/productos", data);
+
+      if (response.error) {
+        swal({
+          title: "Error",
+          text: response.msg || "No se pudo crear el producto",
+          icon: "error",
+          button: "OK",
+        });
+        return;
+      }
+
+      swal({
+        title: "Información",
+        text: "El producto se creó correctamente",
+        icon: "success",
+        button: "OK",
+      });
+
+      navigate(`/home-productos/${idCategoria}`);
+    } catch (error) {
+      swal({
+        title: "Error",
+        text: "Ocurrió un error al crear el producto",
+        icon: "error",
+        button: "OK",
+      });
+    }
   };
 
   const onSubmit = (e) => {
@@ -74,72 +91,29 @@ const CrearProductos = () => {
           </p>
           <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
             <form onSubmit={onSubmit} className="space-y-4">
-              <div>
-                <label className="uppercase text-gray-600 block text-sm font-bold">
-                  Nombre del producto
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  placeholder="Ingrese el producto"
-                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                  value={nombre}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-sm font-bold">
-                  Descripcion del producto
-                </label>
-                <input
-                  type="text"
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="descripcion"
-                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                  value={descripcion}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-sm font-bold">
-                  Stock del producto
-                </label>
-                <input
-                  type="number"
-                  id="stock"
-                  name="stock"
-                  placeholder="stock"
-                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                  value={stock}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-sm font-bold">
-                  Precio del producto
-                </label>
-                <input
-                  type="number"
-                  id="precio"
-                  name="precio"
-                  placeholder="precio"
-                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                  value={precio}
-                  onChange={onChange}
-                />
-
-                <label className="uppercase text-gray-600 block text-sm font-bold">
-                  Imagen del producto
-                </label>
-                <input
-                  type="text"
-                  id="imagen"
-                  name="imagen"
-                  placeholder="Imagen del producto"
-                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                  value={imagen}
-                  onChange={onChange}
-                />
-              </div>
+              {["nombre", "descripcion", "stock", "precio", "imagen"].map(
+                (campo) => (
+                  <div key={campo}>
+                    <label className="uppercase text-gray-600 block text-sm font-bold">
+                      {campo.charAt(0).toUpperCase() + campo.slice(1)} del
+                      producto
+                    </label>
+                    <input
+                      type={
+                        campo === "stock" || campo === "precio"
+                          ? "number"
+                          : "text"
+                      }
+                      id={campo}
+                      name={campo}
+                      placeholder={`Ingrese ${campo}`}
+                      className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                      value={categoria[campo]}
+                      onChange={onChange}
+                    />
+                  </div>
+                )
+              )}
               <input
                 type="submit"
                 value="Crear Productos"
@@ -152,4 +126,5 @@ const CrearProductos = () => {
     </>
   );
 };
+
 export default CrearProductos;

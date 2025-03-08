@@ -9,22 +9,29 @@ const Admin = () => {
   const navigate = useNavigate();
   const [categorias, setCategorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Nuevo estado
 
   useEffect(() => {
     const autenticarUsuario = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
+        setIsAuthenticated(false);
         navigate("/");
       }
     };
     autenticarUsuario();
   }, [navigate]);
 
+  useEffect(() => {
+    if (!isAuthenticated) return; // Evita cargar categorías si no está autenticado
+    cargarCategorias();
+  }, [isAuthenticated]);
+
   const cargarCategorias = async () => {
     setIsLoading(true);
     try {
       const response = await crud.GET(`/api/categorias`);
-      if (response && response.categoria) {
+      if (response?.categoria) {
         setCategorias(response.categoria);
       } else {
         console.error("Respuesta de la API inválida:", response);
@@ -45,10 +52,6 @@ const Admin = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    cargarCategorias();
-  }, []);
 
   const borrarCategoria = async (e, idCategoria) => {
     swal({
@@ -85,6 +88,10 @@ const Admin = () => {
   const crearProductos = (idCategoria) => {
     navigate(`/home-productos/${idCategoria}`);
   };
+
+  if (!isAuthenticated) {
+    return null; // Evita renderizar el contenido si no está autenticado
+  }
 
   if (isLoading) {
     return <div>Cargando categorías...</div>;

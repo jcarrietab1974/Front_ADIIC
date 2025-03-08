@@ -1,45 +1,53 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import Header from "../componentes/Header";
-import { Link, useParams } from "react-router-dom";
 import crud from "../conexiones/crud";
 
 const RegularProductos = () => {
-  const { id } = useParams(); // Capturar el ID de la categoría desde la URL
+  const { id } = useParams();
   const [categoria, setCategoria] = useState(null);
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const cargarDatos = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      // Obtener detalles de la categoría seleccionada
-      const categoriaResponse = await crud.GET(`/api/categorias/${id}`);
-      setCategoria(categoriaResponse.categoria || null);
-
-      // Obtener productos de la categoría seleccionada
-      const productosResponse = await crud.GET(
-        `/api/productos/porcategoria/${id}`
-      );
-
-      console.log("Respuesta completa de la API:", productosResponse);
-
-      if (!Array.isArray(productosResponse)) {
-        console.error("Respuesta inesperada de la API:", productosResponse);
-        setProductos([]);
-      } else {
-        setProductos(productosResponse); // ✅ Asignar directamente el array de productos
-      }
-    } catch (error) {
-      setError(error.message);
-      console.error("Error al cargar datos:", error);
-    } finally {
-      setLoading(false);
+  // Verificar autenticación antes de renderizar el componente
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
+    const cargarDatos = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const categoriaResponse = await crud.GET(`/api/categorias/${id}`);
+        setCategoria(categoriaResponse.categoria || null);
+
+        const productosResponse = await crud.GET(
+          `/api/productos/porcategoria/${id}`
+        );
+
+        console.log("Respuesta completa de la API:", productosResponse);
+
+        if (!Array.isArray(productosResponse)) {
+          console.error("Respuesta inesperada de la API:", productosResponse);
+          setProductos([]);
+        } else {
+          setProductos(productosResponse);
+        }
+      } catch (error) {
+        setError(error.message);
+        console.error("Error al cargar datos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     cargarDatos();
   }, [id]);
 
@@ -71,7 +79,6 @@ const RegularProductos = () => {
           </Link>
         </div>
 
-        {/* Sección de Productos */}
         <section className="bg-lime-500 p-6 rounded-lg shadow-md">
           {productos.length === 0 ? (
             <p className="text-white text-center">
