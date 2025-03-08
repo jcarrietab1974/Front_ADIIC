@@ -17,15 +17,27 @@ const CrearProductos = () => {
   }, []);
 
   const [categoria, setCategoria] = useState({
+    referencia: "",
     nombre: "",
     descripcion: "",
+    talla: "",
+    color: "",
     stock: "",
     precio: "",
     imagen: "",
     categoriaId: "",
   });
 
-  const { nombre, descripcion, stock, precio, imagen } = categoria;
+  const {
+    referencia,
+    nombre,
+    descripcion,
+    talla,
+    color,
+    stock,
+    precio,
+    imagen,
+  } = categoria;
 
   const onChange = (e) => {
     setCategoria({
@@ -37,8 +49,11 @@ const CrearProductos = () => {
   const ingresarCategoria = async () => {
     try {
       const data = {
+        referencia,
         nombre,
         descripcion,
+        talla,
+        color,
         stock,
         precio,
         imagen,
@@ -91,29 +106,36 @@ const CrearProductos = () => {
           </p>
           <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
             <form onSubmit={onSubmit} className="space-y-4">
-              {["nombre", "descripcion", "stock", "precio", "imagen"].map(
-                (campo) => (
-                  <div key={campo}>
-                    <label className="uppercase text-gray-600 block text-sm font-bold">
-                      {campo.charAt(0).toUpperCase() + campo.slice(1)} del
-                      producto
-                    </label>
-                    <input
-                      type={
-                        campo === "stock" || campo === "precio"
-                          ? "number"
-                          : "text"
-                      }
-                      id={campo}
-                      name={campo}
-                      placeholder={`Ingrese ${campo}`}
-                      className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                      value={categoria[campo]}
-                      onChange={onChange}
-                    />
-                  </div>
-                )
-              )}
+              {[
+                "referencia",
+                "nombre",
+                "descripcion",
+                "talla",
+                "color",
+                "stock",
+                "precio",
+                "imagen",
+              ].map((campo) => (
+                <div key={campo}>
+                  <label className="uppercase text-gray-600 block text-sm font-bold">
+                    {campo.charAt(0).toUpperCase() + campo.slice(1)} del
+                    producto
+                  </label>
+                  <input
+                    type={
+                      campo === "stock" || campo === "precio"
+                        ? "number"
+                        : "text"
+                    }
+                    id={campo}
+                    name={campo}
+                    placeholder={`Ingrese ${campo}`}
+                    className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                    value={categoria[campo]}
+                    onChange={onChange}
+                  />
+                </div>
+              ))}
               <input
                 type="submit"
                 value="Crear Productos"
