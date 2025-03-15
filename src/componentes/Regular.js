@@ -53,14 +53,14 @@ const Regular = () => {
       <Header />
       <main className="flex-1 w-full p-4 md:p-6 lg:p-8 bg-lime-200">
         <div className="text-center mb-8">
-          <h1 className="text-lime-900 font-bold text-3xl tracking-tight text-center mb-6 italic">
+          <p className="text-lime-900 font-bold text-3xl tracking-tight text-center mb-6 italic">
             Panel de vendedores
-          </h1>
+          </p>
         </div>
 
         {/* Sección de Categorías */}
         <section className="bg-lime-300 p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold text-lime-900 mb-4">CATEGORIAS</h2>
+          <p className="text-2xl font-bold text-lime-900 mb-4">CATEGORIAS</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categorias.map((category) => (
               <a

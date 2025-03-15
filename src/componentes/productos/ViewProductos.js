@@ -6,7 +6,16 @@ import { useNavigate, useParams } from "react-router-dom";
 export const ViewProductos = ({ producto }) => {
   const navigate = useNavigate();
 
-  const { nombre, descripcion, stock, precio, imagen } = producto;
+  const {
+    referencia,
+    nombre,
+    descripcion,
+    talla,
+    color,
+    stock,
+    precio,
+    imagen,
+  } = producto;
 
   const { idCategoria } = useParams();
 
@@ -17,11 +26,11 @@ export const ViewProductos = ({ producto }) => {
     setProductos(response.productos);
   };
 
-  console.log(productos);
+  //console.log(productos);
 
   useEffect(() => {
     cargarProductos();
-  }, []); //Para que solo se ejecute una vez
+  }, [cargarProductos]); //Para que solo se ejecute una vez
 
   const borrarProducto = async (e, idProducto) => {
     swal({
@@ -64,11 +73,16 @@ export const ViewProductos = ({ producto }) => {
 
       <div className="flex flex-col flex-grow lg:flex-grow-0 items-start w-full lg:w-2/3">
         <p className="mb-1 text-lg text-gray-50 break-words">
+          Referencia: {referencia}
+        </p>
+        <p className="mb-1 text-lg text-gray-50 break-words">
           Nombre: {nombre}
         </p>
         <p className="mb-1 text-lg text-gray-50 break-words">
           Descripción: {descripcion}
         </p>
+        <p className="mb-1 text-lg text-gray-50 break-words">Talla: {talla}</p>
+        <p className="mb-1 text-lg text-gray-50 break-words">Color: {color}</p>
         <p className="mb-1 text-lg text-gray-50">Stock: {stock}</p>
         <p className="mb-1 text-lg text-gray-50">Precio: ${precio}</p>
         <div className="flex flex-row flex-wrap mt-4 gap-2 w-full justify-center lg:justify-start">

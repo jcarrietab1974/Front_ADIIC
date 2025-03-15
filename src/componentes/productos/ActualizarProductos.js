@@ -7,8 +7,21 @@ import swal from "sweetalert";
 
 const ActualizarProductos = () => {
   const navigate = useNavigate();
+  const { idProducto } = useParams(); // Eliminamos idCategoria ya que no está en la ruta
 
-  // Verificación del usuario ANTES del renderizado
+  const [producto, setProducto] = useState({
+    referencia: "",
+    nombre: "",
+    descripcion: "",
+    talla: "",
+    color: "",
+    stock: 0,
+    precio: 0,
+    imagen: "",
+    categoriaId: "", // Inicializamos la categoría correctamente
+  });
+
+  // Verificación del usuario
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -16,37 +29,14 @@ const ActualizarProductos = () => {
     }
   }, [navigate]);
 
-  const { idCategoria, idProducto } = useParams();
-
-  const [categoria, setCategoria] = useState({
-    nombre: "",
-    descripcion: "",
-    stock: 0,
-    precio: 0,
-    imagen: "",
-    categoriaId: "",
-  });
-
-  const { nombre, descripcion, stock, precio, imagen } = categoria;
-
-  const onChange = (e) => {
-    setCategoria({
-      ...categoria,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // Cargar datos del producto si existe un idProducto
+  // Cargar datos del producto
   useEffect(() => {
     const cargarProducto = async () => {
       if (idProducto) {
         try {
           const response = await crud.GET(`/api/productos/${idProducto}`);
           if (response && response.length > 0) {
-            setCategoria({
-              ...response[0],
-              categoriaId: idCategoria, // Asegurar que mantenga la relación con la categoría
-            });
+            setProducto(response[0]); // Asignamos la categoría real del producto
           }
         } catch (error) {
           console.error("Error al cargar el producto:", error);
@@ -59,10 +49,25 @@ const ActualizarProductos = () => {
       }
     };
     cargarProducto();
-  }, [idProducto, idCategoria]);
+  }, [idProducto]);
+
+  const onChange = (e) => {
+    setProducto({
+      ...producto,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const validarDatos = () => {
-    if (!nombre || !descripcion || precio <= 0 || stock < 0) {
+    if (
+      !producto.referencia ||
+      !producto.nombre ||
+      !producto.descripcion ||
+      !producto.talla ||
+      !producto.color ||
+      producto.precio <= 0 ||
+      producto.stock < 0
+    ) {
       swal(
         "Error",
         "Todos los campos son obligatorios y deben tener valores válidos",
@@ -73,38 +78,20 @@ const ActualizarProductos = () => {
     return true;
   };
 
-  const ingresarCategoria = async () => {
-    const data = {
-      nombre,
-      descripcion,
-      stock,
-      precio,
-      imagen,
-      categoriaId: idCategoria,
-    };
-
+  const actualizarProducto = async () => {
     try {
-      let response;
-      if (idProducto) {
-        response = await crud.PUT(`/api/productos/${idProducto}`, data);
-      } else {
-        response = await crud.POST("/api/productos", data);
-      }
-
-      const mensaje1 = idProducto
-        ? "El producto se actualizó correctamente"
-        : "El producto se creó correctamente";
+      await crud.PUT(`/api/productos/${idProducto}`, producto);
 
       swal({
         title: "Información",
-        text: mensaje1,
+        text: "El producto se actualizó correctamente",
         icon: "success",
         button: "OK",
       });
 
-      navigate(`/home-productos/${idCategoria}`);
+      navigate(`/home-productos/${producto.categoriaId}?updated=true`);
     } catch (error) {
-      console.error("Error al actualizar/crear el producto:", error);
+      console.error("Error al actualizar el producto:", error);
       swal("Error", "No se pudo completar la operación", "error");
     }
   };
@@ -112,7 +99,7 @@ const ActualizarProductos = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (!validarDatos()) return;
-    ingresarCategoria();
+    actualizarProducto();
   };
 
   return (
@@ -122,10 +109,22 @@ const ActualizarProductos = () => {
         <Sidebar />
         <main className="flex-1 flex flex-col items-center bg-lime-200 p-6">
           <p className="text-lime-900 font-bold text-3xl text-center mb-4 italic">
-            {idProducto ? "Actualizar Producto" : "Crear Producto"}
+            Actualizar Producto
           </p>
           <div className="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
             <form onSubmit={onSubmit} className="space-y-4">
+              <label className="uppercase text-gray-600 block text-sm font-bold">
+                Referencia del producto
+              </label>
+              <input
+                type="text"
+                name="referencia"
+                placeholder="Ingrese el producto"
+                className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                value={producto.referencia}
+                onChange={onChange}
+              />
+
               <label className="uppercase text-gray-600 block text-sm font-bold">
                 Nombre del producto
               </label>
@@ -134,7 +133,7 @@ const ActualizarProductos = () => {
                 name="nombre"
                 placeholder="Ingrese el producto"
                 className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                value={nombre}
+                value={producto.nombre}
                 onChange={onChange}
               />
 
@@ -146,7 +145,31 @@ const ActualizarProductos = () => {
                 name="descripcion"
                 placeholder="Descripción"
                 className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                value={descripcion}
+                value={producto.descripcion}
+                onChange={onChange}
+              />
+
+              <label className="uppercase text-gray-600 block text-sm font-bold">
+                Talla del producto
+              </label>
+              <input
+                type="text"
+                name="talla"
+                placeholder="Ingrese el producto"
+                className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                value={producto.talla}
+                onChange={onChange}
+              />
+
+              <label className="uppercase text-gray-600 block text-sm font-bold">
+                Color del producto
+              </label>
+              <input
+                type="text"
+                name="color"
+                placeholder="Ingrese el producto"
+                className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                value={producto.color}
                 onChange={onChange}
               />
 
@@ -158,7 +181,7 @@ const ActualizarProductos = () => {
                 name="stock"
                 placeholder="Stock"
                 className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                value={stock}
+                value={producto.stock}
                 onChange={onChange}
                 min="0"
               />
@@ -171,26 +194,14 @@ const ActualizarProductos = () => {
                 name="precio"
                 placeholder="Precio"
                 className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                value={precio}
+                value={producto.precio}
                 onChange={onChange}
                 min="0"
               />
 
-              <label className="uppercase text-gray-600 block text-sm font-bold">
-                Imagen del producto
-              </label>
-              <input
-                type="text"
-                name="imagen"
-                placeholder="URL de la imagen"
-                className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
-                value={imagen}
-                onChange={onChange}
-              />
-
               <input
                 type="submit"
-                value={idProducto ? "Actualizar Producto" : "Crear Producto"}
+                value="Actualizar Producto"
                 className="bg-lime-500 hover:bg-lime-700 transition duration-300 w-full py-3 text-white uppercase font-bold rounded cursor-pointer"
               />
             </form>

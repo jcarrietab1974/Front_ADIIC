@@ -4,47 +4,55 @@ import Login from "./componentes/Login";
 import CrearCuenta from "./componentes/CrearCuenta";
 import Admin from "./componentes/Admin";
 import Home from "./componentes/Home";
+import Regular from "./componentes/Regular";
+import RegularProductos from "./componentes/RegularProductos";
+
+// Categorías
 import CrearCategoria from "./componentes/CrearCategoria";
 import ActualizarCategoria from "./componentes/categorias/ActualizaCategoria";
+
+// Productos
 import HomeProductos from "./componentes/productos/HomeProductos";
 import CrearProductos from "./componentes/productos/CrearProductos";
 import ActualizarProductos from "./componentes/productos/ActualizarProductos";
-import Regular from "./componentes/Regular";
-import RegularProductos from "./componentes/RegularProductos";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" exact element={<Home />} />
-        <Route path="/login" exact element={<Login />} />
-        <Route path="/crear-cuenta" exact element={<CrearCuenta />} />
-        <Route path="/admin" exact element={<Admin />} />
-        <Route path="/regular" exact element={<Regular />} />
-        <Route path="/regproducto/:id" exact element={<RegularProductos />} />
-        <Route path="/crear-categoria" exact element={<CrearCategoria />} />
+        {/* Rutas principales */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/crear-cuenta" element={<CrearCuenta />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/regular" element={<Regular />} />
+
+        {/* Rutas de Categorías */}
+        <Route path="/crear-categoria" element={<CrearCategoria />} />
         <Route
           path="/actualizar-categoria/:idCategoria"
-          exact
           element={<ActualizarCategoria />}
         />
+
+        {/* Rutas de Productos */}
         <Route
           path="/home-productos/:idCategoria"
-          exact
           element={<HomeProductos />}
         />
         <Route
           path="/crear-producto/:idCategoria"
-          exact
           element={<CrearProductos />}
         />
         <Route
           path="/actualizar-producto/:idProducto"
-          exact
           element={<ActualizarProductos />}
         />
+
+        {/* Rutas de Productos en modo regular */}
+        <Route path="/regproducto/:id" element={<RegularProductos />} />
       </Routes>
     </Router>
   );
 }
+
 export default App;

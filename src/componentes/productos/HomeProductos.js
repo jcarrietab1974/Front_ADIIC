@@ -9,37 +9,52 @@ const HomeProductos = () => {
   const navigate = useNavigate();
   const { idCategoria } = useParams();
   const [productos, setProductos] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Inicializa en false
+  const [loading, setLoading] = useState(true);
+  const [categoria, setCategoria] = useState(null); // Estado para almacenar la categoría
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/");
-      return; // Evita que el resto del efecto se ejecute
-    }
-    setIsAuthenticated(true);
+    const autenticarUsuario = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsAuthenticated(false);
+        navigate("/");
+      }
+    };
+    autenticarUsuario();
   }, [navigate]);
 
   useEffect(() => {
-    if (!isAuthenticated) return; // No cargar productos si no está autenticado
+    if (!idCategoria) {
+      console.error("ID de categoría no recibido");
+      return;
+    }
 
-    const cargarProductos = async () => {
+    const cargarDatos = async () => {
+      setLoading(true);
       try {
-        const response = await crud.GET(
+        // Obtener productos por categoría
+        const productosResponse = await crud.GET(
           `/api/productos/porcategoria/${idCategoria}`
         );
-        setProductos(response);
+        setProductos(Array.isArray(productosResponse) ? productosResponse : []);
+
+        // Obtener información de la categoría
+        const categoriaResponse = await crud.GET(
+          `/api/categorias/${idCategoria}`
+        );
+        setCategoria(categoriaResponse?.categoria || null);
       } catch (error) {
-        console.error("Error al cargar productos:", error);
+        console.error("Error al cargar datos:", error);
+        setProductos([]);
+        setCategoria(null);
+      } finally {
+        setLoading(false);
       }
     };
 
-    cargarProductos();
-  }, [idCategoria, isAuthenticated]);
-
-  if (!isAuthenticated) {
-    return null; // Evita mostrar la UI hasta que se resuelva la autenticación
-  }
+    cargarDatos();
+  }, [idCategoria]);
 
   return (
     <>
@@ -48,12 +63,14 @@ const HomeProductos = () => {
         <Sidebar idCategoria={idCategoria} className="self-start" />
         <main className="flex-1 py-4">
           <div className="mt-2 flex justify-center">
-            <p className="text-lime-900 font-bold text-4xl tracking-tight text-center mb-6 italic">
-              Lista de Productos
+            <p className="text-lime-900 font-bold text-2xl md:text-3xl tracking-tight italic text-center md:text-left">
+              Productos de {categoria?.nombre || "Categoría"}
             </p>
           </div>
           <div className="bg-lime-500 shadow mt-5 rounded-lg w-4/5 mx-auto my-2 p-4">
-            {productos.length > 0 ? (
+            {loading ? (
+              <p className="text-center text-white">Cargando productos...</p>
+            ) : productos.length > 0 ? (
               productos.map((producto) => (
                 <ViewProductos key={producto._id} producto={producto} />
               ))

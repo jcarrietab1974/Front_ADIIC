@@ -99,17 +99,27 @@ const RegularProductos = () => {
                     />
                   </div>
                   <div className="p-4">
-                    <p className="mb-1 text-lg text-black break-words font-bold">
-                      {producto.nombre}
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Referencia: </strong>
+                      {producto.referencia}
                     </p>
-                    <p className="mb-1 text-sm text-black break-words font-bold">
-                      {producto.descripcion}
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Nombre:</strong> {producto.nombre}
                     </p>
-                    <p className="mb-1 text-sm text-black break-words font-bold">
-                      Stock: {producto.stock}
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Descripción:</strong> {producto.descripcion}
                     </p>
-                    <p className="mb-1 text-sm text-black break-words font-bold">
-                      Precio: ${producto.precio}
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Talla:</strong> {producto.talla}
+                    </p>
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Color:</strong> {producto.color}
+                    </p>
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Stock:</strong> {producto.stock}
+                    </p>
+                    <p className="mb-1 text-sm text-black break-words">
+                      <strong>Precio:</strong> ${producto.precio}
                     </p>
                   </div>
                 </div>

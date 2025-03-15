@@ -48,7 +48,6 @@ class crud {
   }
 
   async PUT(resource, body) {
-
     const token = localStorage.getItem("token");
 
     let bearer;
@@ -87,12 +86,11 @@ class crud {
       headers: {
         "Content-Type": "application/json",
         "x-auth-token": bearer,
-      }
-    }
+      },
+    };
     const url = `${back.api.baseURL}${resource}`;
     let response = await (await fetch(url, data)).json();
     return response;
-
   }
 }
 export default new crud();
