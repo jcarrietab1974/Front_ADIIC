@@ -6,6 +6,7 @@ import Admin from "./componentes/Admin";
 import Home from "./componentes/Home";
 import Regular from "./componentes/Regular";
 import RegularProductos from "./componentes/RegularProductos";
+import Cabecera from "./componentes/cabeceras/Cabecera";
 
 // Categorías
 import CrearCategoria from "./componentes/CrearCategoria";
@@ -15,6 +16,12 @@ import ActualizarCategoria from "./componentes/categorias/ActualizaCategoria";
 import HomeProductos from "./componentes/productos/HomeProductos";
 import CrearProductos from "./componentes/productos/CrearProductos";
 import ActualizarProductos from "./componentes/productos/ActualizarProductos";
+
+// Clientes
+import Clientes from "./componentes/clientes/Clientes";
+
+// Facturas
+import FacturaPage from "./componentes/facturas/Factura";
 
 function App() {
   return (
@@ -26,6 +33,9 @@ function App() {
         <Route path="/crear-cuenta" element={<CrearCuenta />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/regular" element={<Regular />} />
+        <Route path="/cliente" element={<Clientes />} />
+        <Route path="/cabecera" element={<Cabecera />} />
+        <Route path="/factura" element={<FacturaPage />} />
 
         {/* Rutas de Categorías */}
         <Route path="/crear-categoria" element={<CrearCategoria />} />

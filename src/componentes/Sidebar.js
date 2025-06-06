@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ idCategoria = null }) => {
   const linkStyles =
@@ -47,6 +47,18 @@ const Sidebar = ({ idCategoria = null }) => {
         aria-label="Crear nueva cuenta"
       >
         Crear Cuenta
+      </Link>
+
+      <Link to="/cliente" className={linkStyles} aria-label="Cliente">
+        Cliente
+      </Link>
+
+      <Link to="/cabecera" className={linkStyles} aria-label="Cabecera">
+        Cabeceras
+      </Link>
+
+      <Link to="/factura" className={linkStyles} aria-label="Cabecera">
+        Facturas
       </Link>
     </aside>
   );

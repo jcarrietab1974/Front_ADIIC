@@ -3,11 +3,13 @@ import crud from "../conexiones/crud";
 import Header from "./Header";
 import { Link, useNavigate } from "react-router-dom";
 import swal from "sweetalert";
+import FacturaModal from "../componentes/facturas/FacturaModal";
 
 const Regular = () => {
   const navigate = useNavigate();
   const [categorias, setCategorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [facturas, setFacturas] = useState([]);
 
   // Verificar autenticación antes de cargar datos
   useEffect(() => {
@@ -17,6 +19,26 @@ const Regular = () => {
       return; // Detener la ejecución si el usuario no está autenticado
     }
   }, [navigate]);
+
+  useEffect(() => {
+    fetchFacturas("/api/factura");
+  }, []);
+
+  const fetchFacturas = async (url) => {
+    setIsLoading(true);
+    try {
+      const response = await crud.GET(url);
+      if (response) {
+        setFacturas(Array.isArray(response) ? response : [response]);
+      } else {
+        swal("Error", "No se pudieron cargar las cabeceras.", "error");
+      }
+    } catch (error) {
+      swal("Error", "Error al cargar las cabeceras.", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const cargarCategorias = async () => {
     setIsLoading(true);
@@ -57,6 +79,28 @@ const Regular = () => {
             Panel de vendedores
           </p>
         </div>
+
+        {/* Botón "Agregar" */}
+        <button
+          className="my-3 md:mt-0 flex items-center gap-3 hover:bg-lime-500 px-3 py-2 rounded-xl font-bold"
+          onClick={() => FacturaModal(() => fetchFacturas("/api/factura"))}
+        >
+          Facturar Venta
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-9 h-9"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </button>
 
         {/* Sección de Categorías */}
         <section className="bg-lime-300 p-6 rounded-lg shadow-md mb-8">
