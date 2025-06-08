@@ -5,33 +5,14 @@ import "jspdf-autotable";
 
 const getAuthToken = () => localStorage.getItem("token");
 
-// ==================================================================
-// ======== INICIO: FUNCIÓN AUXILIAR AÑADIDA ========
-// ==================================================================
-
-/**
- * Llama a la API para incrementar el contador de compras de un cliente.
- * No bloquea la UI y maneja sus propios errores en la consola.
- * @param {string} clienteId El ID del cliente.
- * @param {string} token El token de autenticación.
- */
+// =========== FUNCIÓN AUXILIAR ===========
 const incrementarComprasCliente = async (clienteId, token) => {
-  if (!clienteId) {
-    console.warn(
-      "No se proporcionó un ID de cliente para incrementar las compras."
-    );
-    return;
-  }
+  if (!clienteId) return;
   try {
-    // Se realiza la llamada a la nueva ruta del backend
     await crud.PUT(`/api/clientes/incrementar-compra/${clienteId}`, null, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(
-      `Contador de compras incrementado para el cliente: ${clienteId}`
-    );
   } catch (error) {
-    // Si falla, solo lo mostramos en consola para no interrumpir el flujo del usuario
     console.error(
       "Error al intentar incrementar el contador de compras:",
       error.message
@@ -39,11 +20,7 @@ const incrementarComprasCliente = async (clienteId, token) => {
   }
 };
 
-// ==================================================================
-// ========= FIN: FUNCIÓN AUXILIAR AÑADIDA =========
-// ==================================================================
-
-// -- ESTILOS PERSONALIZADOS --
+// =========== ESTILOS ===========
 const style = document.createElement("style");
 style.innerHTML = `
   .factura-grid {
@@ -129,7 +106,7 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// -- COMPONENTE PRINCIPAL --
+// =========== COMPONENTE PRINCIPAL ===========
 const FacturaModal = async (estadoPrevio = {}) => {
   const token = getAuthToken();
   if (!token) {
@@ -152,7 +129,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
   let clienteSeleccionado = estadoPrevio.clienteSeleccionado || null;
   let datosOriginalesCliente = estadoPrevio.datosOriginalesCliente || null;
 
-  // --- Cargar sucursales y productos ---
+  // Cargar sucursales y productos
   const obtenerSucursales = async () => {
     const res = await crud.GET("/api/cabecera");
     if (Array.isArray(res)) return res;
@@ -179,7 +156,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
     return;
   }
 
-  // --- UI ---
+  // UI
   const formContainer = document.createElement("div");
   const errorGlobalStock = document.createElement("div");
   errorGlobalStock.className = "error-global-stock";
@@ -197,9 +174,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
   sucursales.forEach((s) => {
     const opt = document.createElement("option");
     opt.value = s._id || s.id || s.value || "";
-    opt.textContent = `${s.local || s.nombre || "Sucursal"} - ${
-      s.direccion || ""
-    }`;
+    opt.textContent = `${s.local || s.nombre || "Sucursal"} - ${s.direccion || ""}`;
     if (estadoPrevio.sucursal && opt.value === estadoPrevio.sucursal) {
       opt.selected = true;
     }
@@ -207,7 +182,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
   });
   formContainer.appendChild(selectSucursal);
 
-  // --- Datos Cliente ---
+  // Datos Cliente
   const labelCliente = document.createElement("h4");
   labelCliente.textContent = "Datos del Cliente";
   labelCliente.style.marginTop = "20px";
@@ -307,7 +282,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
   );
   formContainer.appendChild(clienteDiv);
 
-  // --- Productos ---
+  // Productos
   const labelProducto = document.createElement("h4");
   labelProducto.textContent = "Buscar y Escoger Productos";
   labelProducto.style.marginTop = "20px";
@@ -346,7 +321,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
       </tr>
     </tfoot>`;
 
-  // --- Calcular totales y sincronizar arrays ---
+  // Calcular totales y sincronizar arrays
   const calcularTotales = () => {
     let subtotal = 0,
       descuentoTotal = 0,
@@ -367,12 +342,12 @@ const FacturaModal = async (estadoPrevio = {}) => {
       );
       const precioUnitario = producto ? parseFloat(producto.precio) : 0;
       const valorBase = cantidad * precioUnitario;
-      const valorConDescuento = valorBase * (1 - descuento / 100);
-      const iva = valorConDescuento * (ivaPorcentaje / 100);
-      const totalProducto = valorConDescuento + iva;
+      const valorDescuento = valorBase * (descuento / 100);
+      const valorIVA = valorBase * (ivaPorcentaje / 100);
+      const totalProducto = valorBase - valorDescuento + valorIVA;
       subtotal += valorBase;
-      descuentoTotal += valorBase * (descuento / 100);
-      ivaTotal += iva;
+      descuentoTotal += valorDescuento;
+      ivaTotal += valorIVA;
       total += totalProducto;
       fila.children[7].textContent = `$${totalProducto.toFixed(2)}`;
     });
@@ -407,7 +382,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
     );
   };
 
-  // --- Renderizar productos previamente seleccionados
+  // Renderizar productos previamente seleccionados
   if (productos.length > 0) {
     productos.forEach((p, idx) => {
       const cantidad = cantidades[idx] || 1;
@@ -419,9 +394,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
         <td>${p.nombre}</td>
         <td>${p.unidad || "Und"}</td>
         <td>
-          <input type="number" value="${cantidad}" min="1" max="${
-        p.stock
-      }" class="swal-input" style="width: 80px;">
+          <input type="number" value="${cantidad}" min="1" max="${p.stock}" class="swal-input" style="width: 80px;">
         </td>
         <td>${p.precio}</td>
         <td><input type="number" value="${descuento}" min="0" max="100" class="swal-input" style="width: 80px;"></td>
@@ -469,7 +442,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
     calcularTotales();
   }
 
-  // --- Filtrado y sugerencias productos (añadir productos nuevos)
+  // Filtrado y sugerencias productos (añadir productos nuevos)
   inputBusqueda.addEventListener("input", () => {
     const valor = inputBusqueda.value.toLowerCase();
     sugerencias.innerHTML = "";
@@ -491,16 +464,13 @@ const FacturaModal = async (estadoPrevio = {}) => {
         cantidades.push(1);
         descuentos.push(0);
         ivas.push(0);
-        const idx = productos.length - 1;
         const fila = document.createElement("tr");
         fila.innerHTML = `
           <td>${p.referencia}</td>
           <td>${p.nombre}</td>
           <td>${p.unidad || "Und"}</td>
           <td>
-            <input type="number" value="1" min="1" max="${
-              p.stock
-            }" class="swal-input" style="width: 80px;">
+            <input type="number" value="1" min="1" max="${p.stock}" class="swal-input" style="width: 80px;">
           </td>
           <td>${p.precio}</td>
           <td><input type="number" value="0" min="0" max="100" class="swal-input" style="width: 80px;"></td>
@@ -556,7 +526,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
 
   formContainer.append(inputBusqueda, sugerencias, tablaProductos);
 
-  // --- Mostrar modal con SweetAlert ---
+  // Mostrar modal con SweetAlert
   swal({
     title: "Crear Factura",
     content: formContainer,
@@ -580,7 +550,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
       return;
     }
 
-    let esClienteNuevo = false; // <<< PASO 1: Declarar la bandera aquí
+    let esClienteNuevo = false;
 
     // --- Cliente ---
     const clienteData = {
@@ -663,7 +633,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
           clienteIdAUsar = resCrear.cliente?._id || null;
 
           if (clienteIdAUsar) {
-            esClienteNuevo = true; // <<< PASO 2: Marcar al cliente como nuevo
+            esClienteNuevo = true;
           }
 
           if (!clienteIdAUsar) {
@@ -689,7 +659,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
       }
     }
 
-    // --- Validar stock antes de enviar la factura ---
+    // Validar stock antes de enviar la factura
     sincronizarArraysDesdeTabla();
     let stockValido = true;
     for (let i = 0; i < productos.length; i++) {
@@ -708,90 +678,70 @@ const FacturaModal = async (estadoPrevio = {}) => {
       errorGlobalStock.style.display = "none";
     }
 
-    // --- PREPARAR productosParaEnviar con subtotal, iva y total por producto ---
+    // ===== CALCULOS CON TU LÓGICA =====
     const productosParaEnviar = productos.map((producto, i) => {
       const cantidad = cantidades[i];
       const precioUnitario = parseFloat(producto.precio);
-      const descuento = descuentos[i] || 0;
+      const descuentoPorcentaje = descuentos[i] || 0;
       const ivaPorcentaje = ivas[i] || 0;
+
       const valorBase = cantidad * precioUnitario;
-      const valorConDescuento = valorBase * (1 - descuento / 100);
-      const iva = valorConDescuento * (ivaPorcentaje / 100);
-      const total = valorConDescuento + iva;
+      const valorDescuento = valorBase * (descuentoPorcentaje / 100);
+      const valorIVA = valorBase * (ivaPorcentaje / 100);
+      const total = valorBase - valorDescuento + valorIVA;
+
       return {
         producto: producto._id,
-        referencia: producto.referencia, // <-- AGREGADO
+        referencia: producto.referencia,
         cantidad: cantidad,
-        descuento: descuento,
         descripcion: producto.nombre,
         subtotal: valorBase,
-        iva: iva,
+        descuento: descuentoPorcentaje,
+        valorDescuento: valorDescuento,
+        ivaPorcentaje: ivaPorcentaje,
+        valorIVA: valorIVA,
         total: total,
       };
     });
 
-    // Totales de la tabla
-    const subtotal =
-      parseFloat(
-        tablaProductos
-          .querySelector("#subtotal")
-          .textContent.replace(/[^0-9.-]+/g, "")
-      ) || 0;
-    const descuentoFactura =
-      parseFloat(
-        tablaProductos
-          .querySelector("#descuento")
-          .textContent.replace(/[^0-9.-]+/g, "")
-      ) || 0;
-    const ivaFactura =
-      parseFloat(
-        tablaProductos
-          .querySelector("#ivaTotal")
-          .textContent.replace(/[^0-9.-]+/g, "")
-      ) || 0;
-    const total =
-      parseFloat(
-        tablaProductos
-          .querySelector("#totalFactura")
-          .textContent.replace(/[^0-9.-]+/g, "")
-      ) || 0;
+    // Calcular totales generales
+    let subtotal = 0,
+        descuentoTotal = 0,
+        ivaTotal = 0,
+        total = 0;
+
+    productosParaEnviar.forEach((p) => {
+      subtotal += p.subtotal;
+      descuentoTotal += p.valorDescuento;
+      ivaTotal += p.valorIVA;
+      total += p.total;
+    });
 
     const datosFactura = {
       cliente: clienteIdAUsar,
       cabecera: selectSucursal.value,
       productos: productosParaEnviar,
       subtotal,
-      descuento: descuentoFactura,
-      iva: ivaFactura,
+      descuento: descuentoTotal,
+      iva: ivaTotal,
       total,
     };
 
-    // --- ENVÍO Y PDF ---
+    // ENVÍO Y PDF
     try {
       const resp = await crud.POST("/api/factura", datosFactura, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (resp && resp.ok) {
-        // ===============================================================
-        // ============= INICIO: LLAMADA A LA NUEVA FUNCIÓN =============
-        // ===============================================================
-
-        // Una vez que la factura se guarda con éxito, se llama a la función
-        // para incrementar el contador de compras del cliente.
-        // Lo hacemos sin 'await' aquí para que no bloquee la generación del PDF.
         incrementarComprasCliente(datosFactura.cliente, token);
 
-        // ===============================================================
-        // ============== FIN: LLAMADA A LA NUEVA FUNCIÓN ==============
-        // ===============================================================
-
-        // --- GENERAR PDF con jsPDF ---
+        // Generar PDF con jsPDF
         const doc = new jsPDF();
         doc.setFontSize(16);
         doc.text("Factura de Venta", 105, 18, { align: "center" });
 
-        // -------- SUCURSAL DEBAJO DEL TITULO --------
+        // Sucursal
         let y = 26;
         doc.setFontSize(11);
 
@@ -801,28 +751,22 @@ const FacturaModal = async (estadoPrevio = {}) => {
         );
 
         if (sucursalObj) {
-          doc.text(`${sucursalObj.local}`, 105, y, {
-            align: "center",
-          });
+          doc.text(`${sucursalObj.local}`, 105, y, { align: "center" });
           y += 6;
           doc.text(`NIT: ${sucursalObj.nit}`, 105, y, { align: "center" });
           y += 6;
-          doc.text(`Dirección: ${sucursalObj.direccion}`, 105, y, {
-            align: "center",
-          });
+          doc.text(`Dirección: ${sucursalObj.direccion}`, 105, y, { align: "center" });
           y += 6;
-          doc.text(`Teléfono: ${sucursalObj.telefono}`, 105, y, {
-            align: "center",
-          });
+          doc.text(`Teléfono: ${sucursalObj.telefono}`, 105, y, { align: "center" });
           y += 6;
           doc.text(`Email: ${sucursalObj.email}`, 105, y, { align: "center" });
-          y += 10; // Espacio extra antes del cliente
+          y += 10;
         } else {
           doc.text("Sucursal: -", 105, y, { align: "center" });
           y += 10;
         }
 
-        // -------- DATOS DEL CLIENTE Y FACTURA (como siempre) --------
+        // Datos del cliente
         doc.setFontSize(10);
         doc.text(`Cliente: ${clienteNombre.value}`, 15, y);
         doc.text(`NIT/CC: ${clienteNit.value}`, 15, y + 5);
@@ -833,8 +777,8 @@ const FacturaModal = async (estadoPrevio = {}) => {
         if (resp.factura && resp.factura.numeroFactura)
           doc.text(`N° Factura: ${resp.factura.numeroFactura}`, 15, y + 30);
 
-        // -------- TABLA DE PRODUCTOS --------
-        let yTabla = y + 38; // Espacio suficiente después de datos del cliente
+        // Tabla de productos
+        let yTabla = y + 38;
         doc.setFontSize(12);
         doc.text("Productos:", 15, yTabla);
         yTabla += 7;
@@ -850,22 +794,12 @@ const FacturaModal = async (estadoPrevio = {}) => {
         yTabla += 6;
 
         productosParaEnviar.forEach((p) => {
-          doc.text(`${p.referencia}`, 15, yTabla); // <-- AHORA MUESTRA LA REFERENCIA
+          doc.text(`${p.referencia}`, 15, yTabla);
           doc.text(`${p.descripcion}`, 40, yTabla);
           doc.text(`${p.cantidad}`, 95, yTabla);
-          doc.text(
-            `${parseFloat(p.subtotal / p.cantidad).toFixed(2)}`,
-            110,
-            yTabla
-          );
-          doc.text(`${p.descuento}`, 130, yTabla);
-          doc.text(
-            `${((p.iva / (p.subtotal * (1 - p.descuento / 100))) * 100).toFixed(
-              1
-            )}`,
-            150,
-            yTabla
-          );
+          doc.text(`${parseFloat(p.subtotal / p.cantidad).toFixed(2)}`, 110, yTabla);
+          doc.text(`${p.descuento}%`, 130, yTabla);
+          doc.text(`${p.ivaPorcentaje}%`, 150, yTabla);
           doc.text(`${p.total.toFixed(2)}`, 170, yTabla);
           yTabla += 6;
         });
@@ -873,9 +807,9 @@ const FacturaModal = async (estadoPrevio = {}) => {
         yTabla += 6;
         doc.text(`Subtotal: $${subtotal.toFixed(2)}`, 140, yTabla);
         yTabla += 6;
-        doc.text(`Descuento: $${descuentoFactura.toFixed(2)}`, 140, yTabla);
+        doc.text(`Descuento: $${descuentoTotal.toFixed(2)}`, 140, yTabla);
         yTabla += 6;
-        doc.text(`IVA: $${ivaFactura.toFixed(2)}`, 140, yTabla);
+        doc.text(`IVA: $${ivaTotal.toFixed(2)}`, 140, yTabla);
         yTabla += 6;
         doc.setFontSize(14);
         doc.text(`TOTAL: $${total.toFixed(2)}`, 140, yTabla);
