@@ -14,7 +14,7 @@ const CrearProductos = () => {
     if (!token) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   const [categoria, setCategoria] = useState({
     referencia: "",
@@ -27,6 +27,8 @@ const CrearProductos = () => {
     imagen: "",
     categoriaId: "",
   });
+
+  const [camposVacios, setCamposVacios] = useState([]);
 
   const {
     referencia,
@@ -44,6 +46,10 @@ const CrearProductos = () => {
       ...categoria,
       [e.target.name]: e.target.value,
     });
+    // Limpia el campo de la lista de campos vacíos si el usuario lo diligencia
+    if (camposVacios.includes(e.target.name)) {
+      setCamposVacios(camposVacios.filter((campo) => campo !== e.target.name));
+    }
   };
 
   const ingresarCategoria = async () => {
@@ -92,6 +98,50 @@ const CrearProductos = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    // Validar campos vacíos
+    const camposObligatorios = [
+      "referencia",
+      "nombre",
+      "descripcion",
+      "talla",
+      "color",
+      "stock",
+      "precio",
+      "imagen",
+    ];
+
+    let vacios = camposObligatorios.filter(
+      (campo) => !categoria[campo] || categoria[campo].toString().trim() === ""
+    );
+
+    // Validar stock y precio como números positivos
+    if (
+      categoria.stock === "" ||
+      isNaN(Number(categoria.stock)) ||
+      Number(categoria.stock) <= 0
+    ) {
+      if (!vacios.includes("stock")) vacios.push("stock");
+    }
+    if (
+      categoria.precio === "" ||
+      isNaN(Number(categoria.precio)) ||
+      Number(categoria.precio) <= 0
+    ) {
+      if (!vacios.includes("precio")) vacios.push("precio");
+    }
+
+    setCamposVacios(vacios);
+
+    if (vacios.length > 0) {
+      swal({
+        title: "Campos obligatorios",
+        text: "Debes completar todos los campos correctamente.\nAsegúrate que stock y precio sean números mayores a 0.",
+        icon: "warning",
+        button: "OK",
+      });
+      return;
+    }
+
     ingresarCategoria();
   };
 
@@ -130,9 +180,14 @@ const CrearProductos = () => {
                     id={campo}
                     name={campo}
                     placeholder={`Ingrese ${campo}`}
-                    className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
+                    className={`w-full mt-2 p-3 border rounded-xl bg-gray-50 ${
+                      camposVacios.includes(campo) ? "border-red-500" : ""
+                    }`}
                     value={categoria[campo]}
                     onChange={onChange}
+                    min={
+                      campo === "stock" || campo === "precio" ? 1 : undefined
+                    }
                   />
                 </div>
               ))}
