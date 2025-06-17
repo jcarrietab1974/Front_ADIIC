@@ -30,6 +30,16 @@ const CrearCategoria = () => {
   };
 
   const ingresarCategoria = async () => {
+    if (!nombre.trim() || !imagen.trim()) {
+      swal({
+        title: "Error",
+        text: "Todos los campos son obligatorios",
+        icon: "warning",
+        button: "OK",
+      });
+      return;
+    }
+
     try {
       const data = { nombre, imagen };
       await crud.POST("/api/categorias", data);
@@ -49,6 +59,7 @@ const CrearCategoria = () => {
         title: "Error",
         text: "Hubo un problema al crear la categoría",
         icon: "error",
+        button: "OK",
       });
     }
   };
