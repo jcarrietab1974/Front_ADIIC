@@ -8,6 +8,7 @@ const CabeceraModal = ({
   actualizarCabeceras,
 }) => {
   const [cabecera, setCabecera] = useState(cabeceraState);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     setCabecera(cabeceraState);
@@ -21,18 +22,34 @@ const CabeceraModal = ({
   };
 
   const handleUpdate = async () => {
+    const { local, nit, direccion, telefono, email } = cabecera;
+
+    // Validar campos vacíos
+    if (!local || !nit || !direccion || !telefono || !email) {
+      swal("Advertencia", "Todos los campos son obligatorios.", "warning");
+      return;
+    }
+
+    setIsUpdating(true);
     try {
       const response = await crud.PUT(
         `/api/cabecera/${cabecera._id}`,
         cabecera
       );
-      if (response) {
-        swal("Éxito", "Cabecera actualizada correctamente.", "success");
-        actualizarCabeceras();
-        changeModalCabecera();
-      }
+
+      swal(
+        "Éxito",
+        response.msg || "Cabecera actualizada correctamente.",
+        "success"
+      );
+      actualizarCabeceras();
+      changeModalCabecera();
     } catch (error) {
-      swal("Error", "No se pudo actualizar la cabecera.", "error");
+      const msg =
+        error.response?.data?.msg || "No se pudo actualizar la cabecera.";
+      swal("Error", msg, "error");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -97,10 +114,41 @@ const CabeceraModal = ({
           </button>
 
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 w-full sm:w-auto"
+            className={`flex justify-center items-center gap-2 px-4 py-2 rounded-lg w-full sm:w-auto ${
+              isUpdating
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            } text-white`}
             onClick={handleUpdate}
+            disabled={isUpdating}
           >
-            Guardar Cambios
+            {isUpdating ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+                Guardando...
+              </>
+            ) : (
+              "Guardar Cambios"
+            )}
           </button>
         </div>
       </div>

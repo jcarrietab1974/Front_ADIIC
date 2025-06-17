@@ -9,6 +9,7 @@ const ActualizarCategoria = () => {
   const navigate = useNavigate();
   const { idCategoria } = useParams();
   const [categoria, setCategoria] = useState({ nombre: "", imagen: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const autenticarUsuario = () => {
@@ -22,15 +23,15 @@ const ActualizarCategoria = () => {
 
   useEffect(() => {
     const cargarCategoria = async () => {
+      setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
         const response = await crud.GET(`/api/categorias/${idCategoria}`);
         setCategoria(response.categoria);
       } catch (error) {
         console.error("Error al cargar la categoría:", error);
         swal("Error", "No se pudo cargar la categoría", "error");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -45,6 +46,13 @@ const ActualizarCategoria = () => {
   };
 
   const actualizarCategoria = async () => {
+    if (!categoria.nombre.trim() || !categoria.imagen.trim()) {
+      swal("Campos vacíos", "Todos los campos son obligatorios", "warning");
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const data = { nombre: categoria.nombre, imagen: categoria.imagen };
       await crud.PUT(`/api/categorias/${idCategoria}`, data);
@@ -53,6 +61,8 @@ const ActualizarCategoria = () => {
     } catch (error) {
       console.error("Error al actualizar la categoría:", error);
       swal("Error", "No se pudo actualizar la categoría", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +95,7 @@ const ActualizarCategoria = () => {
                   value={categoria.nombre}
                   onChange={onChange}
                 />
-                <label className="uppercase text-gray-600 block text-sm font-bold">
+                <label className="uppercase text-gray-600 block text-sm font-bold mt-4">
                   Imagen de la Categoría
                 </label>
                 <input
@@ -93,16 +103,20 @@ const ActualizarCategoria = () => {
                   id="imagen"
                   name="imagen"
                   placeholder="Imagen"
-                  className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+                  className="w-full mt-2 p-3 border rounded-xl bg-gray-50"
                   value={categoria.imagen}
                   onChange={onChange}
                 />
               </div>
-              <input
+              <button
                 type="submit"
-                value="Actualizar Categoría"
-                className="bg-lime-500 hover:bg-lime-700 transition duration-300 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer"
-              />
+                disabled={loading}
+                className={`${
+                  loading ? "bg-gray-400" : "bg-lime-500 hover:bg-lime-700"
+                } transition duration-300 mb-5 w-full py-3 text-white uppercase font-bold rounded`}
+              >
+                {loading ? "Actualizando..." : "Actualizar Categoría"}
+              </button>
             </form>
           </div>
         </main>
