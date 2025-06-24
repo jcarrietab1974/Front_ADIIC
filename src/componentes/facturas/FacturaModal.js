@@ -174,7 +174,9 @@ const FacturaModal = async (estadoPrevio = {}) => {
   sucursales.forEach((s) => {
     const opt = document.createElement("option");
     opt.value = s._id || s.id || s.value || "";
-    opt.textContent = `${s.local || s.nombre || "Sucursal"} - ${s.direccion || ""}`;
+    opt.textContent = `${s.local || s.nombre || "Sucursal"} - ${
+      s.direccion || ""
+    }`;
     if (estadoPrevio.sucursal && opt.value === estadoPrevio.sucursal) {
       opt.selected = true;
     }
@@ -394,7 +396,9 @@ const FacturaModal = async (estadoPrevio = {}) => {
         <td>${p.nombre}</td>
         <td>${p.unidad || "Und"}</td>
         <td>
-          <input type="number" value="${cantidad}" min="1" max="${p.stock}" class="swal-input" style="width: 80px;">
+          <input type="number" value="${cantidad}" min="1" max="${
+        p.stock
+      }" class="swal-input" style="width: 80px;">
         </td>
         <td>${p.precio}</td>
         <td><input type="number" value="${descuento}" min="0" max="100" class="swal-input" style="width: 80px;"></td>
@@ -470,7 +474,9 @@ const FacturaModal = async (estadoPrevio = {}) => {
           <td>${p.nombre}</td>
           <td>${p.unidad || "Und"}</td>
           <td>
-            <input type="number" value="1" min="1" max="${p.stock}" class="swal-input" style="width: 80px;">
+            <input type="number" value="1" min="1" max="${
+              p.stock
+            }" class="swal-input" style="width: 80px;">
           </td>
           <td>${p.precio}</td>
           <td><input type="number" value="0" min="0" max="100" class="swal-input" style="width: 80px;"></td>
@@ -532,7 +538,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
     content: formContainer,
     buttons: {
       cancel: { text: "Cancelar", visible: true, closeModal: true },
-      confirm: { text: "Guardar", closeModal: false },
+      confirm: { text: "Generar PDF", closeModal: false },
     },
     className: "custom-swal",
   }).then(async (confirm) => {
@@ -698,7 +704,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
         subtotal: valorBase,
         descuento: descuentoPorcentaje,
         valorDescuento: valorDescuento,
-        ivaPorcentaje: ivaPorcentaje,
+        iva: ivaPorcentaje,
         valorIVA: valorIVA,
         total: total,
       };
@@ -706,9 +712,9 @@ const FacturaModal = async (estadoPrevio = {}) => {
 
     // Calcular totales generales
     let subtotal = 0,
-        descuentoTotal = 0,
-        ivaTotal = 0,
-        total = 0;
+      descuentoTotal = 0,
+      ivaTotal = 0,
+      total = 0;
 
     productosParaEnviar.forEach((p) => {
       subtotal += p.subtotal;
@@ -755,9 +761,13 @@ const FacturaModal = async (estadoPrevio = {}) => {
           y += 6;
           doc.text(`NIT: ${sucursalObj.nit}`, 105, y, { align: "center" });
           y += 6;
-          doc.text(`Dirección: ${sucursalObj.direccion}`, 105, y, { align: "center" });
+          doc.text(`Dirección: ${sucursalObj.direccion}`, 105, y, {
+            align: "center",
+          });
           y += 6;
-          doc.text(`Teléfono: ${sucursalObj.telefono}`, 105, y, { align: "center" });
+          doc.text(`Teléfono: ${sucursalObj.telefono}`, 105, y, {
+            align: "center",
+          });
           y += 6;
           doc.text(`Email: ${sucursalObj.email}`, 105, y, { align: "center" });
           y += 10;
@@ -797,9 +807,14 @@ const FacturaModal = async (estadoPrevio = {}) => {
           doc.text(`${p.referencia}`, 15, yTabla);
           doc.text(`${p.descripcion}`, 40, yTabla);
           doc.text(`${p.cantidad}`, 95, yTabla);
-          doc.text(`${parseFloat(p.subtotal / p.cantidad).toFixed(2)}`, 110, yTabla);
+          doc.text(
+            `${parseFloat(p.subtotal / p.cantidad).toFixed(2)}`,
+            110,
+            yTabla
+          );
           doc.text(`${p.descuento}%`, 130, yTabla);
-          doc.text(`${p.ivaPorcentaje}%`, 150, yTabla);
+          //doc.text(`${p.ivaPorcentaje}%`, 150, yTabla);
+          doc.text(`${p.iva}%`, 150, yTabla);
           doc.text(`${p.total.toFixed(2)}`, 170, yTabla);
           yTabla += 6;
         });

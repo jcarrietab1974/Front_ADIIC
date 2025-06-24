@@ -93,13 +93,13 @@ const normalizeFacturaProducto = (prod) => {
   };
 };
 
-// --- Generar PDF estilo FacturaModal.js ---
+// --- Generar PDF estilo FacturaModal.js pero usando IVA directo ---
 const generarPDF = (factura, sucursales) => {
   const doc = new jsPDF();
   doc.setFontSize(16);
   doc.text("Factura de Venta", 105, 18, { align: "center" });
 
-  // Sucursal
+  // — Sucursal —
   let y = 26;
   doc.setFontSize(11);
   const sucursalObj = getSucursalData(
@@ -126,7 +126,7 @@ const generarPDF = (factura, sucursales) => {
     y += 10;
   }
 
-  // Datos del cliente y factura
+  // — Datos del cliente y factura —
   doc.setFontSize(10);
   doc.text(`Cliente: ${factura.cliente?.nombre || ""}`, 15, y);
   doc.text(`NIT/CC: ${factura.cliente?.nit || ""}`, 15, y + 5);
@@ -136,7 +136,7 @@ const generarPDF = (factura, sucursales) => {
   doc.text(`Fecha: ${formatearFecha(factura.createdAt)}`, 15, y + 25);
   doc.text(`N° Factura: ${factura.numeroFactura || ""}`, 15, y + 30);
 
-  // Tabla de productos
+  // — Tabla de productos —
   let yTabla = y + 38;
   doc.setFontSize(12);
   doc.text("Productos:", 15, yTabla);
@@ -152,67 +152,63 @@ const generarPDF = (factura, sucursales) => {
   yTabla += 6;
 
   const productosRaw = factura.cuerpo || [];
-  const productos = Array.isArray(productosRaw)
-    ? productosRaw.map(normalizeFacturaProducto)
-    : [];
+  productosRaw.forEach((prod) => {
+    // 1) Normaliza los campos mínimos
+    const referencia =
+      (prod.producto && prod.producto.referencia) ||
+      prod.referencia ||
+      prod.codigo ||
+      "";
+    const descripcion =
+      prod.descripcionProducto ||
+      prod.descripcion ||
+      prod.nombre ||
+      (prod.producto && prod.producto.nombre) ||
+      "";
+    const cantidad = prod.cantidadProducto || prod.cantidad || prod.cant || 1;
+    const precioUnitario =
+      (prod.precioProducto && prod.precioProducto.$numberDecimal
+        ? parseFloat(prod.precioProducto.$numberDecimal)
+        : prod.precioProducto) ||
+      prod.precioUnitario ||
+      prod.precio ||
+      0;
+    const descuento = prod.descuentoProducto || prod.descuento || 0;
+    // 2) Toma el porcentaje de IVA directamente
+    let ivaPorc = prod.ivaProducto ?? prod.iva ?? 0;
+    if (typeof ivaPorc === "object" && ivaPorc.$numberDecimal) {
+      ivaPorc = parseFloat(ivaPorc.$numberDecimal);
+    }
+    // 3) Calcula total (puedes ajustar si ya lo traes de prod.total)
+    const subtotal = precioUnitario * cantidad;
+    const valorDescuento = subtotal * (descuento / 100);
+    const valorIva = subtotal * (ivaPorc / 100);
+    const total = subtotal - valorDescuento + valorIva;
 
-  if (!productos.length) {
-    doc.text("NO HAY PRODUCTOS EN ESTA FACTURA", 15, yTabla + 10);
-  }
+    // — Escribe la fila —
+    doc.text(`${referencia}`, 15, yTabla);
+    doc.text(`${descripcion}`, 40, yTabla);
+    doc.text(`${cantidad}`, 95, yTabla);
+    doc.text(`${precioUnitario.toFixed(2)}`, 110, yTabla);
+    doc.text(`${descuento}%`, 130, yTabla);
+    doc.text(`${ivaPorc}%`, 150, yTabla); // ← aquí el IVA directo
+    doc.text(`${total.toFixed(2)}`, 170, yTabla);
 
-  productos.forEach((p) => {
-    doc.text(`${p.referencia}`, 15, yTabla);
-    doc.text(`${p.descripcion}`, 40, yTabla);
-    doc.text(`${p.cantidad}`, 95, yTabla);
-    doc.text(`${parseFloat(p.precioUnitario || 0).toFixed(2)}`, 110, yTabla);
-    doc.text(`${p.descuento}`, 130, yTabla);
-    doc.text(`${p.ivaPorc}`, 150, yTabla);
-    doc.text(`${parseFloat(p.total || 0).toFixed(2)}`, 170, yTabla);
     yTabla += 6;
   });
 
+  // — Totales generales —
   yTabla += 6;
-  doc.text(
-    `Subtotal: $${formatDecimal(
-      factura.subtotal && factura.subtotal.$numberDecimal
-        ? factura.subtotal.$numberDecimal
-        : factura.subtotal
-    )}`,
-    140,
-    yTabla
-  );
+  doc.text(`Subtotal: $${formatDecimal(factura.subtotal)}`, 140, yTabla);
   yTabla += 6;
-  doc.text(
-    `Descuento: $${formatDecimal(
-      factura.descuento && factura.descuento.$numberDecimal
-        ? factura.descuento.$numberDecimal
-        : factura.descuento
-    )}`,
-    140,
-    yTabla
-  );
+  doc.text(`Descuento: $${formatDecimal(factura.descuento)}`, 140, yTabla);
   yTabla += 6;
-  doc.text(
-    `IVA: $${formatDecimal(
-      factura.iva && factura.iva.$numberDecimal
-        ? factura.iva.$numberDecimal
-        : factura.iva
-    )}`,
-    140,
-    yTabla
-  );
+  doc.text(`IVA: $${formatDecimal(factura.iva)}`, 140, yTabla);
   yTabla += 6;
   doc.setFontSize(14);
-  doc.text(
-    `TOTAL: $${formatDecimal(
-      factura.total && factura.total.$numberDecimal
-        ? factura.total.$numberDecimal
-        : factura.total
-    )}`,
-    140,
-    yTabla
-  );
+  doc.text(`TOTAL: $${formatDecimal(factura.total)}`, 140, yTabla);
 
+  // Abre el PDF en nueva pestaña
   window.open(doc.output("bloburl"), "_blank");
 };
 
