@@ -538,7 +538,7 @@ const FacturaModal = async (estadoPrevio = {}) => {
     content: formContainer,
     buttons: {
       cancel: { text: "Cancelar", visible: true, closeModal: true },
-      confirm: { text: "Generar PDF", closeModal: false },
+      confirm: { text: "Generar Factura", closeModal: false },
     },
     className: "custom-swal",
   }).then(async (confirm) => {

@@ -50,7 +50,7 @@ const Sidebar = ({ idCategoria = null }) => {
       </Link>
 
       <Link to="/cliente" className={linkStyles} aria-label="Cliente">
-        Cliente
+        Clientes
       </Link>
 
       <Link to="/cabecera" className={linkStyles} aria-label="Cabecera">

@@ -405,7 +405,7 @@ const FacturaPage = () => {
                   </div>
                 ))
               ) : (
-                <div className="text-center py-10 text-lg">Sin Facturas</div>
+                <div className="text-center py-10 text-lg">No se encontraron resultados</div>
               )}
             </div>
           </div>

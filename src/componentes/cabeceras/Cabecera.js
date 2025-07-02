@@ -150,7 +150,7 @@ const CabeceraPage = () => {
                 ))
               ) : (
                 <div className="px-4 py-4 text-gray-600">
-                  No hay cabeceras registradas.
+                  No se encontraron resultados.
                 </div>
               )}
             </div>

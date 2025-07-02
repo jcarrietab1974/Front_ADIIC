@@ -96,12 +96,19 @@ const ClientesPage = () => {
                   <input
                     type="text"
                     className="pl-2 pr-6 py-2 outline-none text-gray-800 placeholder-gray-400 w-full md:w-96 rounded-md"
-                    placeholder="Buscar: Ingrese la Cedula o NIT"
+                    placeholder="Ingrese la cédula o NIT del cliente y presione Enter"
                     value={busqueda}
                     onChange={(e) => setBusqueda(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        buscarCliente();
+                        if (!busqueda.trim()) {
+                          swal({
+                            title: "Campo vacío",
+                            text: "Por favor, ingrese un número de cédula o NIT para buscar.",
+                            icon: "warning",
+                            button: "OK",
+                          });
+                        }
                       }
                     }}
                   />
