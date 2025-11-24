@@ -13,7 +13,7 @@ const schema = yup.object().shape({
     .string()
     .email("Correo electrónico no válido")
     .matches(
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|co|es|info|biz)$/,
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|co|es|info|biz|cl)$/,
       "Dominio no permitido"
     )
     .required("El correo es obligatorio"),
